@@ -17,7 +17,7 @@ const SHAPE_IMAGES = {
   Triangle: TriangleImage,
   Square: SquareImage,
 };
-//Hello
+//Hello Hi
 export default function FindTable() {
   const canvasRef = useRef(null);
   const [objects, setObjects] = useState([]);
