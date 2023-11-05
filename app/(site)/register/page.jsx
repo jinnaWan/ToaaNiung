@@ -13,11 +13,6 @@ export default function Register() {
   const router = useRouter();
   const session = useSession();
   console.log(session);
-  // useEffect(() => {
-  //   if (session?.status === "authenticated") {
-  //     router.push("/admin");
-  //   }
-  // });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
