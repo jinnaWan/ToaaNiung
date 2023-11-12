@@ -35,6 +35,15 @@ export default function Admin() {
   const { data: session } = useSession();
   const router = useRouter();
 
+  // useEffect(() => {
+  //   if (session && session.user.isAdmin) {
+  //     // User is an admin, do nothing
+  //   } else if (session) {
+  //     router.push("/"); // Redirect non-admin users to the homepage
+  //   }
+  // }, [session, router]);
+  
+
   const handleSignOut = async () => {
     try {
       const result = await signOut({ redirect: false }); // Use { redirect: false } to prevent automatic redirection
@@ -127,7 +136,8 @@ export default function Admin() {
                                   <a
                                     href={item.href}
                                     onClick={(e) =>
-                                      item.name === "Sign out" && handleSignOut(e)
+                                      item.name === "Sign out" &&
+                                      handleSignOut(e)
                                     }
                                     className={classNames(
                                       active ? "bg-gray-100" : "",

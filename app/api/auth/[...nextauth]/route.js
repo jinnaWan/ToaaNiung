@@ -36,6 +36,27 @@ export const authOptions = {
       },
     }),
   ],
+  callbacks: {
+    async jwt({token, user, session}) {
+      if (user) {
+        return {
+          ...token,
+          isAdmin: user.isAdmin
+        };
+      }
+      return token;
+    },
+    async session({session, token, user}) {
+      // console.log({session, token, user})
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          isAdmin: token.isAdmin,
+        }
+      };
+    },
+  },
   session: {
     strategy: "jwt",
   },

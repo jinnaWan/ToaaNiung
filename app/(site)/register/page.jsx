@@ -11,20 +11,12 @@ export default function Register() {
   const [error, setError] = useState("");
 
   const router = useRouter();
-  const session = useSession();
-  console.log(session);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!name || !email || !password) {
       toast.error("All fields are necessary.");
-      return;
-    }
-
-    // Check the session status before pushing to admin
-    if (session?.status === "authenticated") {
-      router.push("/admin");
       return;
     }
 
@@ -71,104 +63,93 @@ export default function Register() {
   };
 
   return (
-    <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+    <div className="bg-[linear-gradient(180deg,#FFF5EB_0%,#FFF_47.47%)] flex items-start justify-between gap-5 pl-72 max-md:flex-wrap max-md:pl-5">
+      <div className="flex flex-col w-[400px] mt-16 self-end max-md:mt-10">
+        <div className="justify-center items-center self-center flex w-[99px] max-w-full flex-col">
           <img
-            className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
+            loading="lazy"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/014f9ad4-f36d-414c-98c6-5777cbc9d5a8?"
+            className="aspect-[2.15] object-contain object-center w-full overflow-hidden self-stretch"
           />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Registeration Form
-          </h2>
+          <div className="text-neutral-950 text-xs font-extrabold leading-4 tracking-[3.48px] self-stretch whitespace-nowrap mt-2.5">
+            MOONSOON
+          </div>
         </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="Name"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Name
-              </label>
-              <div className="mt-2">
-                <input
-                  onChange={(e) => setName(e.target.value)}
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
+        <form
+          onSubmit={handleSubmit}
+          className="justify-center items-center self-stretch flex flex-col w-full mt-10 max-md:mt-10"
+        >
+          <div className="justify-center items-center self-stretch flex flex-col w-full">
+            <div className="text-neutral-950 text-3xl font-semibold leading-10 self-center whitespace-nowrap">
+              Create account
             </div>
-
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  onChange={(e) => setEmail(e.target.value)}
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
+            <div className="items-start self-stretch flex grow flex-col w-full mt-6">
+              <input
+                onChange={(e) => setName(e.target.value)}
+                id="name"
+                name="name"
+                type="text"
+                autoComplete="name"
+                required
+                placeholder="name"
+                className=" text-black text-base leading-6 self-stretch whitespace-nowrap items-center border border-[color:var(--border-normal-day,#DBDBDB)] w-full mt-6 pl-3 pr-20 py-3 rounded-xl border-solid max-md:pr-5"
+              ></input>
+              <input
+                onChange={(e) => setEmail(e.target.value)}
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                placeholder="Email address"
+                className=" text-black  text-base leading-6 self-stretch whitespace-nowrap items-center border border-[color:var(--border-normal-day,#DBDBDB)] w-full mt-6 pl-3 pr-20 py-3 rounded-xl border-solid max-md:pr-5"
+              ></input>
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                placeholder="Password"
+                className=" text-black  text-base leading-6 self-stretch whitespace-nowrap items-center border border-[color:var(--border-normal-day,#DBDBDB)] w-full mt-6 pl-3 pr-20 py-3 rounded-xl border-solid max-md:pr-5"
+              ></input>
             </div>
+          </div>
 
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Password
-                </label>
-              </div>
-              <div className="mt-2">
-                <input
-                  onChange={(e) => setPassword(e.target.value)}
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Sign up
-              </button>
-            </div>
-          </form>
-
-          <p className="mt-10 text-center text-sm text-gray-500">
-            Already sign up?{" "}
-            <a
-              href="/login"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+          <div className="items-start self-stretch flex grow flex-col w-full mt-8">
+            <button
+              type="submit"
+              // className="text-white text-center text-base leading-6 self-center whitespace-nowrap "
+              className="text-white  justify-center items-center bg-indigo-600 self-stretch flex w-full flex-col px-20 py-3 rounded-xl max-md:px-5 hover:bg-neutral-700 hover:text-black"
             >
-              Click here
-            </a>
-          </p>
+              Continue
+            </button>
+
+            <div className="mt-10 self-center text-center text-sm text-gray-500">
+              Already sign up?{" "}
+
+              <a
+                href="/login"
+                className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              >
+                Click here
+              </a>
+              
+            </div>
+          </div>
+
+        </form>
+        <div className="items-start self-center flex w-[194px] max-w-full gap-2 mt-48 max-md:mt-10">
+          <div className="text-gray-600 text-base leading-6"></div>
+          <div className="text-blue-600 text-center text-base font-semibold leading-6 self-stretch whitespace-nowrap"></div>
         </div>
       </div>
-    </>
+      <img
+        loading="lazy"
+        srcSet="https://cdn.discordapp.com/attachments/1170752491944677567/1171114993975033927/Right_image.png?ex=655b80d4&is=65490bd4&hm=96cc3239f5ab950461eef42a13e684d0d0bca846806f10aa6179ec4e2564f88b&"
+        className="aspect-[0.95] object-contain object-center w-[972px] overflow-hidden max-w-full self-end"
+      />
+    </div>
   );
 }

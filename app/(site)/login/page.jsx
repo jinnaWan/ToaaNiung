@@ -7,20 +7,11 @@ import { toast } from "react-hot-toast"
 export default function Login() {
 
   const router = useRouter();
-  const session = useSession();
   
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-
-  // useEffect(() => {
-  //   if (session) {
-  //     // User is authenticated, you can redirect to the login page or show a message.
-  //     router.push('/admin'); // Redirect to your login page
-  //     return null;
-  //   }
-  // });
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -30,7 +21,7 @@ export default function Login() {
       }
 
       if (callback?.ok && !callback?.error) {
-        router.push("/admin");
+        router.push("/findtable");
         toast.success("Logged in successfully!");
       }
     });

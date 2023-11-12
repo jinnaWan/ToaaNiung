@@ -6,4 +6,4 @@ const MapSchema = new Schema({
   timestamps: true,
 });
 
-export const Map = models.Map || model('Map', MapSchema);
+export const Map = models.Map || mongoose.model('Map', MapSchema);

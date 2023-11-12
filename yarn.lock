@@ -2149,7 +2149,7 @@ queue-microtask@^1.2.2:
 
 react-datetime@^3.2.0:
   version "3.2.0"
-  resolved "https://registry.yarnpkg.com/react-datetime/-/react-datetime-3.2.0.tgz#fdfa4dced5a9b59724f4c478a1ecc3cb6a6a80cf"
+  resolved "https://registry.npmjs.org/react-datetime/-/react-datetime-3.2.0.tgz"
   integrity sha512-w5XdeNIGzBht9CadaZIJhKUhEcDTgH0XokKxGPCxeeJRYL7B3HIKA8CM6Q0xej2JFJt0n5d+zi3maMwaY3262A==
   dependencies:
     prop-types "^15.5.7"
