@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function ConfirmBooking() {
   const router = useRouter();
@@ -33,10 +34,12 @@ export default function ConfirmBooking() {
 
       // Handle success, e.g., show a confirmation message
       console.log("Booking confirmed!");
-      router.push('/myprofile')
+      toast.success("Booking confirmed!");
+      router.push('/findtable')
     } catch (error) {
       // Handle error, e.g., show an error message
       console.error("Error confirming booking", error);
+      toast.error("Error confirming booking");
     }
   };
 

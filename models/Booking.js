@@ -1,4 +1,4 @@
-import mongoose, {model, Schema, models} from "mongoose";
+import mongoose, { Schema, models } from "mongoose";
 
 const bookingSchema = new Schema(
   {
@@ -26,8 +26,13 @@ const bookingSchema = new Schema(
       type: Number,
       required: true,
     },
+    status: {
+      type: String,
+      default: "In Progress",
+      enum: ["In Progress", "Completed", "Cancelled"], // Add other possible statuses as needed
+    },
   },
   { timestamps: true }
 );
 
-export const Booking = models.Booking || mongoose.model('Booking', bookingSchema);
+export const Booking = models.Booking || mongoose.model("Booking", bookingSchema);

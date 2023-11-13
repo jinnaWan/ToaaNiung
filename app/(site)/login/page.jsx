@@ -2,12 +2,11 @@
 import { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast"
+import { toast } from "react-hot-toast";
 
 export default function Login() {
-
   const router = useRouter();
-  
+
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -15,95 +14,103 @@ export default function Login() {
 
   const loginUser = async (e) => {
     e.preventDefault();
-    await signIn("credentials", { ...data, redirect: false }).then((callback) => {
-      if (callback?.error) {
-        toast.error(callback.error);
+    try {
+      const login = await signIn("credentials", { ...data, redirect: false, callbackUrl: '/findtable' });
+      console.log("Login Response:", login);
+  
+      if (login.ok) {
+        toast.success("Successfully Logged in! Redirecting...");
+        // Use the callbackUrl from the response to determine where to redirect
+        router.push(login.url || "/findtable");
+      } else {
+        toast.error("Login failed.");
       }
-
-      if (callback?.ok && !callback?.error) {
-        router.push("/findtable");
-        toast.success("Logged in successfully!");
-      }
-    });
+    } catch (error) {
+      console.error("Login Error:", error);
+    }
   };
+  
 
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
-          />
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Log in Form
-          </h2>
-        </div>
-
-        <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" onSubmit={loginUser}>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Email address
-              </label>
-              <div className="mt-2">
+      <div className="flex flex-wrap bg-[linear-gradient(180deg,#FFF5EB_0%,#FFF_47.47%)] justify-items-center">
+        <div className="pl-40 pr-40 sm:w-full  xl:w-1/2  h-full flex flex-col  mt-16 self-end  justify-items-center">
+          <div className="  self-center flex w-[99px] max-w-full flex-col  justify-center items-center">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/014f9ad4-f36d-414c-98c6-5777cbc9d5a8?"
+              className="aspect-[2.15] object-contain object-center w-full overflow-hidden self-stretch"
+            />
+            <div className="text-neutral-950 text-xs font-extrabold leading-4 tracking-[3.48px] self-stretch whitespace-nowrap mt-2.5 font-Nunito">
+              MOONSOON
+            </div>
+          </div>
+          <form
+            onSubmit={loginUser}
+            className="justify-center items-center  self-stretch flex flex-col w-full mt-10 max-md:mt-10 font-OpenSans"
+          >
+            <div className="  self-stretch flex flex-col w-full">
+              <div className="text-neutral-950 text-3xl  leading-10 self-center whitespace-nowrap ">
+                Log In
+              </div>
+              <div className="items-start self-stretch flex grow flex-col w-full mt-6">
                 <input
-                  onChange={e => setData({ ...data, email: e.target.value })}
+                  onChange={(e) => setData({ ...data, email: e.target.value })}
                   id="email"
                   name="email"
                   type="email"
                   autoComplete="email"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium leading-6 text-gray-900"
-                >
-                  Password
-                </label>
-              </div>
-              <div className="mt-2">
+                  placeholder="Email address"
+                  className=" text-black  text-base leading-6 self-stretch whitespace-nowrap  border border-[color:var(--border-normal-day,#DBDBDB)] w-full mt-6 pl-3 pr-20 py-3 rounded-xl border-solid max-md:pr-5"
+                ></input>
                 <input
-                  onChange={e => setData({ ...data, password: e.target.value })}
+                  onChange={(e) =>
+                    setData({ ...data, password: e.target.value })
+                  }
                   id="password"
                   name="password"
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
+                  placeholder="Password"
+                  className=" text-black  text-base leading-6 self-stretch whitespace-nowrap  border border-[color:var(--border-normal-day,#DBDBDB)] w-full mt-6 pl-3 pr-20 py-3 rounded-xl border-solid max-md:pr-5"
+                ></input>
               </div>
             </div>
 
-            <div>
+            <div className="items-start self-stretch flex grow flex-col w-full mt-8">
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                className="justify-center bg-zinc-950  items-center text-white item-center self-stretch flex w-full flex-col px-20 py-3 rounded-xl max-md:px-5 hover:bg-neutral-700 hover:text-black "
               >
-                Log in
+                Continue
               </button>
             </div>
           </form>
 
-          <p className="mt-10 text-center text-sm text-gray-500">
+          <p className="mt-10 self-center text-center text-sm text-gray-500 font-OpenSans">
             Doesn't have an account yet?{" "}
             <a
               href="/register"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+              className="font-semibold leading-6 text-black hover:text-gray-800"
             >
               Click here
             </a>
           </p>
+
+          <div className="items-start self-center flex w-[194px] max-w-full gap-2 mt-48 max-md:mt-10">
+            <div className="text-gray-600 text-base leading-6"></div>
+            <div className="text-blue-600 text-center text-base font-semibold leading-6 self-stretch whitespace-nowrap"></div>
+          </div>
+        </div>
+
+        <div className=" sm:w-full xl:w-1/2  bg-gray-500 h-full">
+          <img
+            loading="lazy"
+            srcSet="https://cdn.discordapp.com/attachments/1170752491944677567/1171114993975033927/Right_image.png?ex=655b80d4&is=65490bd4&hm=96cc3239f5ab950461eef42a13e684d0d0bca846806f10aa6179ec4e2564f88b&"
+            className="aspect-[0.95] object-contain object-center  overflow-hidden w-full self-end h-full"
+          />
         </div>
       </div>
     </>

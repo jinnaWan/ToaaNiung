@@ -18,6 +18,14 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    penalty: {
+      type: Number,
+      default: 0,
+    },
+    status: {
+      type: String,
+      default: "Active",
+    },
   },
   { timestamps: true }
 );

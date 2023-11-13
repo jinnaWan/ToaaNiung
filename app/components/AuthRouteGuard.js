@@ -7,7 +7,7 @@ const AuthRouteGuard = ({ children, protectedRoutes }) => {
   useEffect(() => {
     if (session) {
       if (protectedRoutes.includes(window.location.pathname)) {
-        window.location.href = '/admin';
+        window.location.href = '/findtable';
       }
     }
   }, [session]);

@@ -16,11 +16,16 @@ export default function FindTable() {
   const [maxPeople, setMaxPeople] = useState(0);
   const getCurrentDateTime = () => {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = `${now.getMonth() + 1}`.padStart(2, "0"); // Months are zero-based
-    const day = `${now.getDate()}`.padStart(2, "0");
-    const hours = `${now.getHours()}`.padStart(2, "0");
-    const minutes = `${now.getMinutes()}`.padStart(2, "0");
+    const thailandOffset = 7 * 60; // Thailand is UTC+7
+    const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
+    const thailandTime = new Date(utcTime + thailandOffset * 60000);
+
+    const year = thailandTime.getFullYear();
+    const month = `${thailandTime.getMonth() + 1}`.padStart(2, "0");
+    const day = `${thailandTime.getDate()}`.padStart(2, "0");
+    const hours = `${thailandTime.getHours()}`.padStart(2, "0");
+    const minutes = `${thailandTime.getMinutes()}`.padStart(2, "0");
+
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
@@ -30,12 +35,7 @@ export default function FindTable() {
 
   const handleNextClick = () => {
     // Check if the necessary data is available for confirmation
-    if (
-      !selectedObject ||
-      !numberPeople ||
-      !tableName ||
-      !maxPeople
-    ) {
+    if (!selectedObject || !numberPeople || !tableName || !maxPeople) {
       toast.error("Please fill in all required information before proceeding.");
       return;
     }
@@ -60,10 +60,18 @@ export default function FindTable() {
       return;
     }
 
+    // Apply the Thailand time zone offset
+    const thailandOffset = 7 * 60;
+    const thailandTime = new Date(
+      selectedDatetime.getTime() + thailandOffset * 60000
+    );
+
+    setDatetime(thailandTime.toISOString().slice(0, -8).toLocaleString());
+
     // Fetch booked tables for the selected date and time
     try {
       const response = await axios.get(
-        `/api/booking?datetime=${selectedDatetime.toISOString()}`
+        `/api/booking?datetime=${thailandTime.toISOString()}`
       );
 
       console.log("Full Response:", response);
@@ -73,8 +81,6 @@ export default function FindTable() {
         toast.error("Empty response received from the server.");
         return;
       }
-
-      setDatetime(selectedDatetime.toISOString().slice(0, -8).toLocaleString());
 
       const bookedTableNames = response.data.bookedTableNames || [];
 
@@ -86,9 +92,9 @@ export default function FindTable() {
       );
 
       if (bookedTableNames.length === 0) {
-        toast.success("Tables are available for booking!");
+        // toast.success("Tables are available for booking!");
       } else {
-        toast.error("Selected date and time are fully booked.");
+        // toast.error("Selected date and time are fully booked.");
       }
 
       // Check if the selected table is booked after updating the date and time
@@ -150,6 +156,9 @@ export default function FindTable() {
 
   useEffect(() => {
     fetchData(); // Fetch data only when the component is mounted
+
+    // Initialize with current datetime and check booking status
+    handleDatetimeChange({ target: { value: getCurrentDateTime() } });
   }, []); // Empty dependency array for one-time execution
 
   const isObjectListEmpty = () => {

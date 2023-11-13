@@ -37,23 +37,28 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({token, user, session}) {
+    async jwt({ token, user, trigger, session }) {
+      // console.log("JWT: ", { token, user, trigger, session });
+      if (trigger === "update") {
+        return { ...token, ...session.user };
+      }
       if (user) {
         return {
           ...token,
-          isAdmin: user.isAdmin
+          isAdmin: user.isAdmin,
         };
       }
       return token;
     },
-    async session({session, token, user}) {
-      // console.log({session, token, user})
+    async session({ session, token }) {
+      // console.log("Session: ", { session, token });
+      session.user = token;
       return {
         ...session,
         user: {
           ...session.user,
           isAdmin: token.isAdmin,
-        }
+        },
       };
     },
   },
