@@ -5,9 +5,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 // Import the shape images (make sure the file paths are correct)
-import TableSImage from "@/public/circle.png";
-import TableMImage from "@/public/triangle.png";
-import TableLImage from "@/public/square.png";
+const TableSImage = "https://cdn.discordapp.com/attachments/1170752491944677567/1174041799564742687/table.png?ex=656626a1&is=6553b1a1&hm=4454bf3b031e36727b6c3df1ae2e78a503f7024119b8e0b677697c8e57599b2c&";
+const TableMImage = "https://cdn.discordapp.com/attachments/1170752491944677567/1174041875691348049/table_1.png?ex=656626b3&is=6553b1b3&hm=8a0861ea0123797747af56ec5ff9596aab19af92beb9d2667fca2cf1afd59560&";
+const TableLImage = "https://cdn.discordapp.com/attachments/1170752491944677567/1174041875951386754/table_2.png?ex=656626b3&is=6553b1b3&hm=81958657e35ea4ce362cc85c926f72fe180da605eb8a89c9a12668be2c4c1dc9&";
 
 const TABLE_SIZES = ["TableS", "TableM", "TableL"]; // Define the shape names
 
