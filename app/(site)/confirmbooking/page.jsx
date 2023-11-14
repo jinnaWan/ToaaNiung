@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Header from "@/app/components/Random/header";
 
 export default function ConfirmBooking() {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function ConfirmBooking() {
       // Handle success, e.g., show a confirmation message
       console.log("Booking confirmed!");
       toast.success("Booking confirmed!");
-      router.push('/findtable')
+      router.push("/findtable");
     } catch (error) {
       // Handle error, e.g., show an error message
       console.error("Error confirming booking", error);
@@ -59,120 +60,127 @@ export default function ConfirmBooking() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = "lightgrey";
 
-      // Set a position for drawing the selected table
-      const positionX = 100; // Set your desired X position
-      const positionY = 75; // Set your desired Y position
-      const highlightSize = 2; // You can adjust the highlight size
+      // Set canvas center coordinates
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
 
-      const tableRadius = 15; // Adjust the table radius as needed
-      const seatRadius = 7; // Adjust the seat radius as needed
-      const spaceBetweenTableAndSeat = 15; // Adjust the space between table and seat as needed
+      // Calculate the size ratio for tables (adjust this ratio as needed)
+      const tableSizeRatio = 4;
+
+      const tableRadius = 15 * tableSizeRatio; // Adjusted table radius
+      const seatRadius = 7 * tableSizeRatio; // Adjusted seat radius
+      const spaceBetweenTableAndSeat = 15 * tableSizeRatio; // Adjusted space between table and seat
       const seatCount = 3; // Number of seats on each side
+
+      // ... (rest of the code remains the same)
+
+      // Update the drawing positions to center the tables within the canvas
+      const positionX = centerX; // Center X
+      const positionY = centerY; // Center Y
+
+      // Adjusted table sizes based on the scale factor
+      const adjustedTableRadius = 15 * tableSizeRatio;
+      const adjustedSeatRadius = 7 * tableSizeRatio;
+      const adjustedSpaceBetweenTableAndSeat = 15 * tableSizeRatio;
 
       if (tableSize === "TableM") {
         // Draw medium table (rectangle) with seats
-        const rectWidth = 50; // Adjust the width of the rectangle
-        const rectHeight = 40; // Adjust the height of the rectangle
+        const rectWidth = 50 * tableSizeRatio; // Adjusted width of the rectangle
+        const rectHeight = 40 * tableSizeRatio; // Adjusted height of the rectangle
+
+        // Calculate position for drawing the rectangle
+        const rectX = centerX - rectWidth / 2;
+        const rectY = centerY - rectHeight / 2;
 
         ctx.beginPath();
-        ctx.rect(
-          positionX - rectWidth / 2 - highlightSize,
-          positionY - rectHeight / 2 - highlightSize,
-          rectWidth + 2 * highlightSize,
-          rectHeight + 2 * highlightSize
-        );
+        ctx.rect(rectX, rectY, rectWidth, rectHeight);
         ctx.fill();
 
         // Calculate the positions of seats
         const seatPositions = [
           {
-            x: positionX - 15 - highlightSize - spaceBetweenTableAndSeat / 2,
-            y: positionY - 30 - highlightSize,
+            x: centerX - 15 * tableSizeRatio - spaceBetweenTableAndSeat / 2,
+            y: centerY - 30 * tableSizeRatio,
           },
           {
-            x: positionX + 15 + highlightSize + spaceBetweenTableAndSeat / 2,
-            y: positionY - 30 - highlightSize,
+            x: centerX + 15 * tableSizeRatio + spaceBetweenTableAndSeat / 2,
+            y: centerY - 30 * tableSizeRatio,
           },
           {
-            x: positionX - 15 - highlightSize - spaceBetweenTableAndSeat / 2,
-            y: positionY + 30 + highlightSize,
+            x: centerX - 15 * tableSizeRatio - spaceBetweenTableAndSeat / 2,
+            y: centerY + 30 * tableSizeRatio,
           },
           {
-            x: positionX + 15 + highlightSize + spaceBetweenTableAndSeat / 2,
-            y: positionY + 30 + highlightSize,
+            x: centerX + 15 * tableSizeRatio + spaceBetweenTableAndSeat / 2,
+            y: centerY + 30 * tableSizeRatio,
           },
         ];
 
         // Draw seats
         seatPositions.forEach((position) => {
-          drawSeat(ctx, position.x, position.y, seatRadius, highlightSize);
+          drawSeat(ctx, position.x, position.y, adjustedSeatRadius, 0);
         });
       } else if (tableSize === "TableL") {
         // Draw large table (rounded rectangle) with seats
-        const roundedRectRadius = 10; // Adjust the rounded rectangle radius as needed
+        const roundedRectRadius = 10 * tableSizeRatio; // Adjusted rounded rectangle radius
+        const tableWidth = 60 * tableSizeRatio; // Adjusted width of the table
+        const tableHeight = 40 * tableSizeRatio; // Adjusted height of the table
+
+        // Calculate the positions for drawing the rounded rectangle
+        const rectX = centerX - tableWidth / 2;
+        const rectY = centerY - tableHeight / 2;
+
         ctx.beginPath();
-        ctx.moveTo(positionX - 30 - highlightSize, positionY - 20 - highlightSize);
+        ctx.moveTo(rectX + roundedRectRadius, rectY);
         ctx.arcTo(
-          positionX + 30 + highlightSize,
-          positionY - 20 - highlightSize,
-          positionX + 30 + highlightSize,
-          positionY + 20 + highlightSize,
-          roundedRectRadius + highlightSize
+          rectX + tableWidth,
+          rectY,
+          rectX + tableWidth,
+          rectY + tableHeight,
+          roundedRectRadius
         );
         ctx.arcTo(
-          positionX + 30 + highlightSize,
-          positionY + 20 + highlightSize,
-          positionX - 30 - highlightSize,
-          positionY + 20 + highlightSize,
-          roundedRectRadius + highlightSize
+          rectX + tableWidth,
+          rectY + tableHeight,
+          rectX,
+          rectY + tableHeight,
+          roundedRectRadius
         );
-        ctx.arcTo(
-          positionX - 30 - highlightSize,
-          positionY + 20 + highlightSize,
-          positionX - 30 - highlightSize,
-          positionY - 20 - highlightSize,
-          roundedRectRadius + highlightSize
-        );
-        ctx.arcTo(
-          positionX - 30 - highlightSize,
-          positionY - 20 - highlightSize,
-          positionX + 30 + highlightSize,
-          positionY - 20 - highlightSize,
-          roundedRectRadius + highlightSize
-        );
+        ctx.arcTo(rectX, rectY + tableHeight, rectX, rectY, roundedRectRadius);
+        ctx.arcTo(rectX, rectY, rectX + tableWidth, rectY, roundedRectRadius);
         ctx.closePath();
         ctx.fill();
 
         // Calculate the angle between each seat
-        const angleIncrement = (2 * Math.PI) / (2 * seatCount);
+        const angleIncrement = (Math.PI * 2) / seatCount;
 
         // Draw seats on the top
         for (let i = 0; i < seatCount; i++) {
           const angle = i * angleIncrement;
           const seatX =
-            positionX -
-            Math.cos(angle) * (30 + spaceBetweenTableAndSeat + highlightSize);
+            centerX -
+            Math.cos(angle) * (30 * tableSizeRatio + spaceBetweenTableAndSeat);
           const seatY =
-            positionY -
-            Math.sin(angle) * (20 + spaceBetweenTableAndSeat + highlightSize);
-          drawSeat(ctx, seatX, seatY, seatRadius, highlightSize);
+            centerY -
+            Math.sin(angle) * (20 * tableSizeRatio + spaceBetweenTableAndSeat);
+          drawSeat(ctx, seatX, seatY, adjustedSeatRadius, 0);
         }
 
         // Draw seats on the bottom
         for (let i = 0; i < seatCount; i++) {
           const angle = Math.PI + i * angleIncrement;
           const seatX =
-            positionX -
-            Math.cos(angle) * (30 + spaceBetweenTableAndSeat + highlightSize);
+            centerX -
+            Math.cos(angle) * (30 * tableSizeRatio + spaceBetweenTableAndSeat);
           const seatY =
-            positionY -
-            Math.sin(angle) * (20 + spaceBetweenTableAndSeat + highlightSize);
-          drawSeat(ctx, seatX, seatY, seatRadius, highlightSize);
+            centerY -
+            Math.sin(angle) * (20 * tableSizeRatio + spaceBetweenTableAndSeat);
+          drawSeat(ctx, seatX, seatY, adjustedSeatRadius, 0);
         }
       } else if (tableSize === "TableS") {
         // Draw small table (TableS) with seats
         ctx.beginPath();
-        ctx.arc(positionX, positionY, tableRadius + highlightSize, 0, 2 * Math.PI);
+        ctx.arc(positionX, positionY, tableRadius + 0, 0, 2 * Math.PI);
         ctx.fill();
 
         drawSeat(
@@ -180,38 +188,106 @@ export default function ConfirmBooking() {
           positionX - tableRadius - spaceBetweenTableAndSeat,
           positionY,
           seatRadius,
-          highlightSize
+          0
         );
         drawSeat(
           ctx,
           positionX + tableRadius + spaceBetweenTableAndSeat,
           positionY,
           seatRadius,
-          highlightSize
+          0
         );
       }
     };
 
     drawSelectedTable();
-
   }, [tableSize, canvasRef]);
 
-
   return (
-    <div>
-      <h1>Confirm Booking</h1>
-      <p>Username: {session?.user.name}</p>
-      <p>Table Name: {tableName}</p>
-      <p>Arrival Time: {formattedArrivalTime}</p>
-      <p>Number of People: {numberOfPeople}</p>
-      <p>Table Size: {tableSize}</p>
-      <canvas
-        ref={canvasRef}
-        width={200} // Set your desired width
-        height={150} // Set your desired height
-        style={{ border: "1px solid #000", borderRadius: "10px" }}
-      />
-      <button onClick={handleConfirmBooking}>Confirm Booking</button>
+    <div className="bg-neutral-50 flex flex-wrap flex-col items-center justify-center">
+      <Header />
+
+      <main className="flex flex-wrap place-items-center bg-white pt-8 w-full justify-center font-DMSans">
+        <div className="items-center flex flex-col">
+          <div className="text-black text-4xl font-bold leading-[70px] whitespace-nowrap max-md:max-w-full max-md:text-4xl max-md:leading-[56px] mt-10">
+            Confirm table reservation
+          </div>
+          <div className="self-stretch w-full mt-20 max-md:max-w-full max-md:mt-10">
+            <div className="gap-5 flex max-md:flex-col max-md:items-stretch max-md:gap-0">
+              <div className="flex flex-col items-stretch w-[64%] max-md:w-full max-md:ml-0">
+                <canvas
+                  ref={canvasRef}
+                  width={550} // Set your desired width
+                  height={417} // Set your desired height
+                  style={{ border: "2px solid #ededed", borderRadius: "10px" }}
+                  className="aspect-[1.78] object-contain object-center w-full self-stretch max-md:max-w-full max-md:mt-10"
+                />
+              </div>
+              <div className="flex flex-col items-stretch w-[36%] ml-5 max-md:w-full max-md:ml-0">
+                <div className="items-stretch flex flex-col my-auto max-md:max-w-full max-md:mt-10">
+                  <div className="items-stretch flex flex-col max-md:max-w-full">
+                    <div className="items-stretch flex flex-col px-5 max-md:max-w-full">
+                      <div className="text-black text-3xl font-medium leading-10 -mr-5 mt-1 max-md:max-w-full">
+                        {session?.user.name}
+                      </div>
+                    </div>
+                    <div className="items-stretch flex flex-col mt-6 px-5 max-md:max-w-full">
+                      <div className="text-neutral-600 text-base leading-5 -mr-5 max-md:max-w-full">
+                        Booking details
+                      </div>
+                      <div className="items-stretch flex w-48 max-w-full gap-2 mt-4 self-start">
+                        <div className="text-cyan-700 text-base font-bold leading-5">
+                          Table Name:
+                        </div>
+                        <div className="text-cyan-700 text-base leading-5 whitespace-nowrap">
+                          {tableName}
+                        </div>
+                      </div>
+                      <div className="items-stretch flex w-48 max-w-full gap-2 mt-4 self-start">
+                        <div className="text-cyan-700 text-base font-bold leading-5">
+                          Table Size:
+                        </div>
+                        <div className="text-cyan-700 text-base leading-5 whitespace-nowrap">
+                          {tableSize === "TableL"
+                            ? "Large"
+                            : tableSize === "TableM"
+                            ? "Medium"
+                            : "Small"}
+                        </div>
+                      </div>
+
+                      <div className="items-stretch flex w-48 max-w-full gap-2 mt-4 self-start">
+                        <div className="text-cyan-700 text-base font-bold leading-5">
+                          ArrivalTime:
+                        </div>
+                        <div className="text-cyan-700 text-base leading-5 whitespace-nowrap">
+                          {formattedArrivalTime}
+                        </div>
+                      </div>
+
+                      <div className="items-stretch flex w-48 max-w-full gap-2 mt-4 self-start">
+                        <div className="text-cyan-700 text-base font-bold leading-5">
+                          Number of People:
+                        </div>
+                        <div className="text-cyan-700 text-base leading-5 whitespace-nowrap">
+                          {numberOfPeople}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleConfirmBooking}
+                    className="text-white text-lg font-bold leading-6 whitespace-nowrap items-stretch bg-teal-500 self-center w-[241px] max-w-full mt-16 px-5 py-4 rounded-[64px] max-md:mt-10 mb-28"
+                  >
+                    Confirm booking
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

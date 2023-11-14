@@ -68,6 +68,7 @@ export async function GET(req) {
       // Filter the data to include only specific fields
       const filteredBookings = bookings.map((booking) => {
         return {
+          id: booking._id,
           tableName: booking.tableName,
           tableSize: booking.tableSize,
           numberOfPeople: booking.numberOfPeople,
@@ -85,3 +86,38 @@ export async function GET(req) {
       );
     }
   }
+
+  export async function POST(req) {
+    try {
+      await mongooseConnect();
+      const data = await req.json();
+      const { selectedBookings } = data;
+  
+      if (!selectedBookings || !Array.isArray(selectedBookings)) {
+        return NextResponse.json(
+          { message: "Invalid data format." },
+          { status: 400 }
+        );
+      }
+  
+      // Update the status of bookings in the database to "Cancelled"
+      const updatedBookings = await Promise.all(
+        selectedBookings.map(async (bookingId) => {
+          return await Booking.findOneAndUpdate(
+            { _id: bookingId },
+            { $set: { status: "Cancelled" } },
+            { new: true }
+          );
+        })
+      );
+  
+      return NextResponse.json(updatedBookings, { status: 200 });
+    } catch (error) {
+      console.error("Error updating booking status:", error);
+      return NextResponse.json(
+        { message: "Error updating booking status." },
+        { status: 500 }
+      );
+    }
+  }
+  
