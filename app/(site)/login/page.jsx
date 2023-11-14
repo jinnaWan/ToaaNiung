@@ -90,7 +90,7 @@ export default function Login() {
           </form>
 
           <p className="mt-10 self-center text-center text-sm text-gray-500 font-OpenSans">
-            Doesn't have an account yet?{" "}
+            Doesn&apos;t have an account yet?{" "}
             <a
               href="/register"
               className="font-semibold leading-6 text-black hover:text-gray-800"

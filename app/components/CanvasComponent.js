@@ -5,9 +5,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 // Import the shape images (make sure the file paths are correct)
-import TableSImage from "../../public/circle.png";
-import TableMImage from "../../public/triangle.png";
-import TableLImage from "../../public/square.png";
+import TableSImage from "@/public/circle.png";
+import TableMImage from "@/public/triangle.png";
+import TableLImage from "@/public/square.png";
 
 const TABLE_SIZES = ["TableS", "TableM", "TableL"]; // Define the shape names
 
