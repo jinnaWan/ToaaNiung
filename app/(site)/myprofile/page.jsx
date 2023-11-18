@@ -12,7 +12,7 @@ export default function MyProfile() {
   const { data: session } = useSession();
   const isAdmin = session?.user.isAdmin;
   const router = useRouter();
-  const [storedSelectedMenu, setStoredSelectedMenu] = useState(None);
+  const [storedSelectedMenu, setStoredSelectedMenu] = useState("");
   const [selectedMenu, setSelectedMenu] = useState(() => {
     if (typeof window !== "undefined") {
       // Retrieve the selectedMenu from localStorage on initial load
