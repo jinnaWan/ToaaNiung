@@ -13,9 +13,12 @@ export default function MyProfile() {
   const isAdmin = session?.user.isAdmin;
   const router = useRouter();
   const [selectedMenu, setSelectedMenu] = useState(() => {
-    // Retrieve the selectedMenu from localStorage on initial load
-    const storedSelectedMenu = localStorage.getItem('selectedMenu');
-    return storedSelectedMenu || 'editprofile'; // Default value if nothing is stored
+    const storedSelectedMenu = None;
+    if (typeof window !== "undefined") {
+      // Retrieve the selectedMenu from localStorage on initial load
+      storedSelectedMenu = localStorage.getItem("selectedMenu");
+    }
+    return storedSelectedMenu || "editprofile"; // Default value if nothing is stored
   });
 
   const handleSignOut = async () => {
@@ -45,9 +48,10 @@ export default function MyProfile() {
   const handleMenuClick = (menu) => (e) => {
     e.preventDefault();
     setSelectedMenu(menu);
-
-    // Save selectedMenu to localStorage when it changes
-    localStorage.setItem('selectedMenu', menu);
+    if (typeof window !== "undefined") {
+      // Save selectedMenu to localStorage when it changes
+      localStorage.setItem("selectedMenu", menu);
+    }
   };
 
   const navigateToFindTable = () => {
