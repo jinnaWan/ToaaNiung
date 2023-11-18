@@ -28,6 +28,11 @@ export const authOptions = {
           if (!passwordsMatch) {
             return null;
           }
+
+          if (user.status === "Banned") {
+            return null; // Return null to signify login failure if user is banned
+          }
+
           console.log("User: ", user);
           return user;
         } catch (error) {
