@@ -42,7 +42,7 @@ export default function Login() {
               className="aspect-[2.15] object-contain object-center w-full overflow-hidden self-stretch"
             />
             <div className="text-neutral-950 text-xs font-extrabold leading-4 tracking-[3.48px] self-stretch whitespace-nowrap mt-2.5 font-Nunito">
-              MOONSOON
+              TOAA-NIUNG
             </div>
           </div>
           <form

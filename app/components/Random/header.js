@@ -31,8 +31,17 @@ export default function Header() {
   return (
     <div className="justify-center items-center bg-neutral-700 self-stretch flex w-full flex-col flex-wrap px-5 py-10 ">
       <div className="items-stretch flex w-[1224px]  justify-between gap-5 py-0.5 flex-wrap">
-        <div className="text-white text-4xl leading-10 backdrop-blur-[2px] self-center w-[250px] my-auto font-Belleza">
-          TOAA-NIUNG
+        <div className="flex items-center gap-3.5">
+          <a href="#" className="flex items-center">
+            <img
+              loading="lazy"
+              srcSet="https://cdn.discordapp.com/attachments/1170752491944677567/1175513295504027739/Logoggez.png?ex=656b8111&is=65590c11&hm=164e1aaaa76c6e1fcc3d450539feb7947c475ca5706f9c577b9351027d79affb&"
+              className="object-contain object-center w-14 max-w-full"
+            />
+            <div className="shadow-2xl pl-4 font-extrabold  tracking-[3.48px] self-stretch whitespace-nowrap mt-0.5 text-white text-center text-3xl leading-10 font-Belleza">
+              TOAA-NIUNG
+            </div>
+          </a>
         </div>
         <div className="items-start flex justify-between gap-5 max-md:justify-center font-DMSans">
           <a

@@ -59,8 +59,8 @@ export default function Admin() {
         >
           <img
             loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/a4f46fc9-225b-4054-b183-d941c03f58d4?"
-            className="aspect-square object-contain object-center w-6 justify-center items-center overflow-hidden shrink-0 max-w-full my-auto"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/014f9ad4-f36d-414c-98c6-5777cbc9d5a8?"
+            className="aspect-square object-contain object-center w-14 justify-center items-center overflow-hidden shrink-0 max-w-full my-auto"
           />
           <div className="text-zinc-800 text-center text-4xl leading-10 font-Belleza">
             TOAA

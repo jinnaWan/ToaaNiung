@@ -8,7 +8,7 @@ export async function POST(req) {
     await mongooseConnect();
     const data = await req.json();
     const { thailandTime } = data;
-    console.log(thailandTime);
+    // console.log(thailandTime);
 
     // Fetch bookings that match the criteria
     const thirtyMinutesAgo = new Date(new Date(thailandTime) - 30 * 60 * 1000); // 30 minutes ago
