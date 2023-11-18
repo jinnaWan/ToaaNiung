@@ -54,9 +54,16 @@ export default function AllBookings() {
         toast.success("Booking status updated successfully");
         // You might want to refresh the bookings after updating the status
         // Implement a function to refresh bookings or refetch the bookings here
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000); // Wait for 1 second before refreshing the page
+        // Update the state directly to trigger a component rerender
+        setBookings((prevBookings) => {
+          const updatedBookings = prevBookings.map((booking) => {
+            if (booking.id === bookingId) {
+              return { ...booking, status: newStatus }; // Update the status of the specific booking
+            }
+            return booking;
+          });
+          return updatedBookings;
+        });
       }
     } catch (error) {
       console.error("Error updating booking status:", error);
@@ -90,9 +97,12 @@ export default function AllBookings() {
 
       if (response.status === 200) {
         toast.success("Booking deleted successfully");
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000); // Wait for 1 second before refreshing the page
+        // Filter out the deleted bookings from the state
+        setBookings((prevBookings) =>
+          prevBookings.filter(
+            (booking) => !selectedBookings.includes(booking.id)
+          )
+        );
       }
       // Optionally, perform any additional actions after successful POST request
     } catch (error) {
@@ -264,7 +274,7 @@ export default function AllBookings() {
             ))}
           </tbody>
         </table>
-        <div className="justify-between items-stretch flex mt-5 w-full gap-5 max-md:max-w-full max-md:flex-wrap">
+        <div className="mb-10 justify-between items-stretch flex mt-5 w-full gap-5 max-md:max-w-full max-md:flex-wrap">
           {!isCancellationMode && (
             <button
               href="#"

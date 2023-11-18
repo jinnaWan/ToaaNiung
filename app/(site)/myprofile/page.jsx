@@ -6,20 +6,12 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import EditProfile from "@/app/components/User/editprofile";
 import HistoryBooking from "@/app/components/User/historybooking";
-import ChangePassword from "@/app/components/User/changepassword";
 
 export default function MyProfile() {
   const { data: session } = useSession();
   const isAdmin = session?.user.isAdmin;
   const router = useRouter();
-  const [storedSelectedMenu, setStoredSelectedMenu] = useState("");
-  const [selectedMenu, setSelectedMenu] = useState(() => {
-    if (typeof window !== "undefined") {
-      // Retrieve the selectedMenu from localStorage on initial load
-      setStoredSelectedMenu(localStorage.getItem("selectedMenu"));
-    }
-    return storedSelectedMenu || "editprofile"; // Default value if nothing is stored
-  });
+  const [selectedMenu, setSelectedMenu] = React.useState("historybooking");
 
   const handleSignOut = async () => {
     try {
@@ -46,12 +38,8 @@ export default function MyProfile() {
   };
 
   const handleMenuClick = (menu) => (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the default behavior (page reload)
     setSelectedMenu(menu);
-    if (typeof window !== "undefined") {
-      // Save selectedMenu to localStorage when it changes
-      localStorage.setItem("selectedMenu", menu);
-    }
   };
 
   const navigateToFindTable = () => {

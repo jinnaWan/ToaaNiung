@@ -71,9 +71,13 @@ export default function HistoryBooking() {
 
       if (response.status === 200) {
         toast.success("Booking canceled successfully");
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000); // Wait for 1 second before refreshing the page
+        // Filter out the canceled bookings from the state
+        setBookings((prevBookings) =>
+          prevBookings.filter(
+            (booking) => !selectedBookings.includes(booking.id)
+          )
+        );
+        setSelectedBookings([]); // Clear the selected bookings
       }
       // Optionally, perform any additional actions after successful POST request
     } catch (error) {
@@ -231,7 +235,7 @@ export default function HistoryBooking() {
             ))}
           </tbody>
         </table>
-        <div className="justify-between items-stretch flex mt-5 w-full gap-5 max-md:max-w-full max-md:flex-wrap">
+        <div className="mb-10 justify-between items-stretch flex mt-5 w-full gap-5 max-md:max-w-full max-md:flex-wrap">
           {!isCancellationMode && (
             <button
               href="#"

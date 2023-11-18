@@ -11,14 +11,7 @@ export default function Admin() {
   const { data: session } = useSession();
   const isAdmin = session?.user.isAdmin;
   const router = useRouter();
-  const [storedSelectedMenu, setStoredSelectedMenu] = useState("");
-  const [selectedMenu, setSelectedMenu] = useState(() => {
-    if (typeof window !== "undefined") {
-      // Retrieve the selectedMenu from localStorage on initial load
-      setStoredSelectedMenu(localStorage.getItem("selectedMenu"));
-    }
-    return storedSelectedMenu || "allbooking"; // Default value if nothing is stored
-  });
+  const [selectedMenu, setSelectedMenu] = React.useState("allbooking");
 
   const handleSignOut = async () => {
     try {
@@ -45,12 +38,8 @@ export default function Admin() {
   };
 
   const handleMenuClick = (menu) => (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent the default behavior (page reload)
     setSelectedMenu(menu);
-    if (typeof window !== "undefined") {
-      // Save selectedMenu to localStorage when it changes
-      localStorage.setItem("selectedMenu", menu);
-    }
   };
 
   const navigateToFindTable = () => {

@@ -474,10 +474,12 @@ export default function CanvasComponent() {
         .post("api/mapping", { data: data }) // Send data as an object with a "data" property
         .then((response) => {
           console.log("Objects saved successfully", response.data);
+          showToast("Objects saved successfully", "success");
           // Reload the page after saving the objects
-          window.location.reload();
+          setObjects(data);
         })
         .catch((error) => {
+          showToast("Error saving objects", "error");
           console.error("Error saving objects", error);
         });
     }
@@ -486,15 +488,19 @@ export default function CanvasComponent() {
   return (
     <div className="flex  flex-col mt-20 self-start  w-5/6 ">
       <div className="overflow-x-auto items-stretch flex flex-col mx-auto">
-        <div className="flex">
-          <div className="shapes-list p-4">
+        <div className="flex flex-wrap w-full justify-center">
+          <div className="shapes-list p-4  h-fit bg-white rounded-xl mr-10">
             <ul>
               {TABLE_SIZES.map((shape) => (
                 <li
                   key={shape}
-                  className={`mb-4 p-2 cursor-pointer ${
-                    selectedShape === shape ? "bg-blue-200" : "bg-gray-200"
-                  }`}
+                  style={{
+                    filter:
+                      selectedShape === shape
+                        ? "invert(200%) sepia(100%) saturate(2394%) hue-rotate(183deg) brightness(104%) contrast(101%)"
+                        : "",
+                  }}
+                  className={` p-2 cursor-pointer  rounded-md `}
                   onClick={() => setSelectedShape(shape)}
                 >
                   <Image
@@ -512,7 +518,11 @@ export default function CanvasComponent() {
               ref={canvasRef}
               width={canvasWidth}
               height={canvasHeight}
-              style={{ border: "1px solid #000", borderRadius: "10px" }}
+              style={{
+                border: "2px solid #ededed",
+                borderRadius: "10px",
+                // backgroundColor: "#ededed", // Set canvas background color here
+              }}
             />
 
             {/* <div>
@@ -538,47 +548,58 @@ export default function CanvasComponent() {
             />
           </div> */}
             {selectedObject && (
-              <div className="object-details">
-                <p>Table Name:</p>
+              <div className="object-details flex flex-wrap justify-center items-center self-center mt-10">
+                <p className=" justify-center text-slate-900 text-center text-normal font-bold leading-5 ">
+                  Table Name:
+                </p>
                 <input
                   type="text"
-                  className="border p-2 mb-2"
+                  className="mx-3 text-zinc-400 text-sm w-60 h-10  appearance-none shadow text-grey-darker font-DMSans whitespace-nowrap border grow p-2.5 rounded-md border-solid border-zinc-400 border-opacity-30"
                   value={tableName}
                   onChange={(e) => setTableName(e.target.value)}
                 />
-                <p>Max People:</p>
+
+                <p className=" justify-center text-slate-900 text-center text-normal font-bold leading-5 ">
+                  Max People:
+                </p>
                 <input
                   type="number"
-                  className="border p-2 mb-2"
+                  className="mx-3 mr-12 text-zinc-400 text-sm w-60 h-10  appearance-none shadow text-grey-darker font-DMSans whitespace-nowrap border grow p-2.5 rounded-md border-solid border-zinc-400 border-opacity-30"
                   value={maxPeople}
                   onChange={(e) => setMaxPeople(parseInt(e.target.value))}
                 />
                 <button
                   onClick={handleSave}
-                  className="m-2 p-2 bg-green-500 text-white"
+                  className=" mr-5 justify-center text-center leading-6 items-stretch  bg-teal-600 grow  rounded-[64px] w-30  px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Save
                 </button>
                 <button
                   onClick={handleRemove}
-                  className="m-2 p-2 bg-red-500 text-white"
+                  className=" justify-center text-center leading-6 items-stretch  bg-red-600 grow  rounded-[64px] w-30  px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 >
                   Remove Object
                 </button>
               </div>
             )}
-            <button
-              onClick={handleClearAll}
-              className="m-2 p-2 bg-gray-500 text-white"
-            >
-              Clear All
-            </button>
-            <button
-              onClick={saveObjectsToDatabase}
-              className="m-2 p-2 bg-blue-500 text-white"
-            >
-              Save Objects
-            </button>
+
+            <div className="flex justify-center mt-10 mb-10">
+              <div className="flex  items-stretch justify-between gap-5 max-md:flex-wrap mx-auto">
+                <button
+                  onClick={handleClearAll}
+                  className="justify-center leading-6 items-stretch  text-center  grow rounded-[64px] w-30  bg-gray-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Clear All
+                </button>
+
+                <button
+                  onClick={saveObjectsToDatabase}
+                  className="justify-center leading-6 items-stretch  text-center  grow rounded-[64px] w-30  bg-teal-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Save Objects
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
