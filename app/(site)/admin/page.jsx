@@ -1,48 +1,21 @@
 "use client";
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import CanvasComponent from "@/app/components/CanvasComponent";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-hot-toast";
-import { useState, useEffect } from "react";
-
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
-const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
-  { name: "Reports", href: "#", current: false },
-];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import toast from "react-hot-toast";
+import CanvasComponent from "@/app/components/admin/CanvasComponent";
+import AllBookings from "@/app/components/admin/AllBookings";
 
 export default function Admin() {
   const { data: session } = useSession();
+  const isAdmin = session?.user.isAdmin;
   const router = useRouter();
-
-  // useEffect(() => {
-  //   if (session && session.user.isAdmin) {
-  //     // User is an admin, do nothing
-  //   } else if (session) {
-  //     router.push("/findtable"); // Redirect non-admin users to the homepage
-  //   }
-  // }, [session, router]);
-  
+  const [selectedMenu, setSelectedMenu] = useState(() => {
+    // Retrieve the selectedMenu from localStorage on initial load
+    const storedSelectedMenu = localStorage.getItem('selectedMenu');
+    return storedSelectedMenu || 'allbooking'; // Default value if nothing is stored
+  });
 
   const handleSignOut = async () => {
     try {
@@ -60,197 +33,103 @@ export default function Admin() {
     }
   };
 
+  const renderSelectedComponent = () => {
+    if (selectedMenu === "allbooking") {
+      return <AllBookings />;
+    } else {
+      return <CanvasComponent />;
+    }
+  };
+
+  const handleMenuClick = (menu) => (e) => {
+    e.preventDefault();
+    setSelectedMenu(menu);
+
+    // Save selectedMenu to localStorage when it changes
+    localStorage.setItem('selectedMenu', menu);
+  };
+
+  const navigateToFindTable = () => {
+    router.push("/findtable"); // Navigating to the '/findtable' route
+  };
+
+  const navigateToProfile = () => {
+    router.push("/myprofile"); // Navigating to the '/myprofile' route
+  };
+
   return (
-    <>
-      <div className="min-h-full">
-        <Disclosure as="nav" className="bg-gray-800">
-          {({ open }) => (
-            <>
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 items-center justify-between">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <img
-                        className="h-8 w-8"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                        alt="Your Company"
-                      />
-                    </div>
-                    <div className="hidden md:block">
-                      <div className="ml-10 flex items-baseline space-x-4">
-                        {navigation.map((item) => (
-                          <a
-                            key={item.name}
-                            href={item.href}
-                            className={classNames(
-                              item.current
-                                ? "bg-gray-900 text-white"
-                                : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                              "rounded-md px-3 py-2 text-sm font-medium"
-                            )}
-                            aria-current={item.current ? "page" : undefined}
-                          >
-                            {item.name}
-                          </a>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="hidden md:block">
-                    <div className="ml-4 flex items-center md:ml-6">
-                      <button
-                        type="button"
-                        className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                      >
-                        <span className="absolute -inset-1.5" />
-                        <span className="sr-only">View notifications</span>
-                        <BellIcon className="h-6 w-6" aria-hidden="true" />
-                      </button>
-
-                      {/* Profile dropdown */}
-                      <Menu as="div" className="relative ml-3">
-                        <div>
-                          <Menu.Button className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                            <span className="absolute -inset-1.5" />
-                            <span className="sr-only">Open user menu</span>
-                            <img
-                              className="h-8 w-8 rounded-full"
-                              src={user.imageUrl}
-                              alt=""
-                            />
-                          </Menu.Button>
-                        </div>
-                        <Transition
-                          as={Fragment}
-                          enter="transition ease-out duration-100"
-                          enterFrom="transform opacity-0 scale-95"
-                          enterTo="transform opacity-100 scale-100"
-                          leave="transition ease-in duration-75"
-                          leaveFrom="transform opacity-100 scale-100"
-                          leaveTo="transform opacity-0 scale-95"
-                        >
-                          <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            {userNavigation.map((item) => (
-                              <Menu.Item key={item.name}>
-                                {({ active }) => (
-                                  <a
-                                    href={item.href}
-                                    onClick={(e) =>
-                                      item.name === "Sign out" &&
-                                      handleSignOut(e)
-                                    }
-                                    className={classNames(
-                                      active ? "bg-gray-100" : "",
-                                      "block px-4 py-2 text-sm text-gray-700"
-                                    )}
-                                  >
-                                    {item.name}
-                                  </a>
-                                )}
-                              </Menu.Item>
-                            ))}
-                          </Menu.Items>
-                        </Transition>
-                      </Menu>
-                    </div>
-                  </div>
-                  <div className="-mr-2 flex md:hidden">
-                    {/* Mobile menu button */}
-                    <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                      <span className="absolute -inset-0.5" />
-                      <span className="sr-only">Open main menu</span>
-                      {open ? (
-                        <XMarkIcon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
-                      ) : (
-                        <Bars3Icon
-                          className="block h-6 w-6"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </Disclosure.Button>
-                  </div>
-                </div>
-              </div>
-
-              <Disclosure.Panel className="md:hidden">
-                <div className="space-y-1 px-2 pb-3 pt-2 sm:px-3">
-                  {navigation.map((item) => (
-                    <Disclosure.Button
-                      key={item.name}
-                      as="a"
-                      href={item.href}
-                      className={classNames(
-                        item.current
-                          ? "bg-gray-900 text-white"
-                          : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                        "block rounded-md px-3 py-2 text-base font-medium"
-                      )}
-                      aria-current={item.current ? "page" : undefined}
-                    >
-                      {item.name}
-                    </Disclosure.Button>
-                  ))}
-                </div>
-                <div className="border-t border-gray-700 pb-3 pt-4">
-                  <div className="flex items-center px-5">
-                    <div className="flex-shrink-0">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={user.imageUrl}
-                        alt=""
-                      />
-                    </div>
-                    <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-white">
-                        {user.name}
-                      </div>
-                      <div className="text-sm font-medium leading-none text-gray-400">
-                        {user.email}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="relative ml-auto flex-shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                    >
-                      <span className="absolute -inset-1.5" />
-                      <span className="sr-only">View notifications</span>
-                      <BellIcon className="h-6 w-6" aria-hidden="true" />
-                    </button>
-                  </div>
-                  <div className="mt-3 space-y-1 px-2">
-                    {userNavigation.map((item) => (
-                      <Disclosure.Button
-                        key={item.name}
-                        as="a"
-                        href={item.href}
-                        className="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-                      >
-                        {item.name}
-                      </Disclosure.Button>
-                    ))}
-                  </div>
-                </div>
-              </Disclosure.Panel>
-            </>
-          )}
-        </Disclosure>
-
-        <header className="bg-white shadow">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              Dashboard
-            </h1>
+    <div className="bg-neutral-50 flex justify-items-stretch flex-wrap">
+      <div className="justify-center items-center bg-white flex grow basis-[0%] flex-col pl-14 pr-14 pt-8 pb-14  w-1/6">
+        <div
+          className="justify-center items-center flex w-[165px]  gap-2"
+          onClick={navigateToFindTable}
+        >
+          <img
+            loading="lazy"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/a4f46fc9-225b-4054-b183-d941c03f58d4?"
+            className="aspect-square object-contain object-center w-6 justify-center items-center overflow-hidden shrink-0 max-w-full my-auto"
+          />
+          <div className="text-zinc-800 text-center text-4xl leading-10 font-Belleza">
+            TOAA
+            <br />
+            NIUNG
           </div>
-        </header>
-        <main>
-          <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-            <CanvasComponent />
+        </div>
+
+        <div className="justify-center items-center flex w-[165px] max-w-full flex-col mt-36 max-md:mt-10 font-DMSans font-medium">
+          <div className="items-stretch flex flex-col px-2">
+            <img
+              loading="lazy"
+              srcSet="https://cdn.discordapp.com/attachments/799566223628173316/1173622367034015824/585e4beacb11b227491c3399.png?ex=6564a001&is=65522b01&hm=ec1ac578a8898cd9cb8d0a17d439d9fba621106b98c499b121b13c237e9d119a&"
+              className="aspect-square object-contain object-center w-[95px] overflow-hidden self-center max-w-full rounded-[50%] bg-black"
+            />
+            <div className="text-black text-center text-2xl font-medium leading-8 mt-2.5">
+              {session?.user.name}
+            </div>
+            <div className="text-zinc-800 text-base font-medium leading-5 self-center whitespace-nowrap">
+              {session?.user.email}
+            </div>
+            <div
+              className={`text-neutral-900 self-center text-xs leading-4 tracking-tight whitespace-nowrap justify-center items-stretch mt-1 px-1.5 rounded-3xl ${
+                isAdmin ? "bg-blue-200" : "bg-orange-300"
+              }`}
+            >
+              {isAdmin ? "Admin" : "Guest"}
+            </div>
           </div>
-        </main>
+
+          <a onClick={handleMenuClick("allbooking")} href="#">
+            <div className="text-zinc-800 text-base font-medium leading-4 mt-14 py-2 px-1 rounded-lg hover:bg-gray-200">
+              All Booking
+            </div>
+          </a>
+
+          <a onClick={handleMenuClick("edittablemap")} href="#">
+            <div className="text-zinc-800 text-base font-medium leading-4 mt-5 py-2 px-1 rounded-lg hover:bg-gray-200">
+              Edit Table Map
+            </div>
+          </a>
+
+          <a onClick={navigateToProfile} href="#">
+            <div className="text-zinc-800 text-base font-medium leading-4 mt-5 py-2 px-1 rounded-lg hover:bg-gray-200">
+              Back To Profile
+            </div>
+          </a>
+        </div>
+
+        <button
+          onClick={handleSignOut}
+          className="justify-center  items-center self-stretch flex  gap-3 mt-10 rounded-3xl hover:bg-gray-200 h-9 w-full"
+        >
+          <img
+            loading="lazy"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/80e5d952-8074-4bbb-afd0-cbda96cffb7d?"
+            className="aspect-square object-contain object-center w-4 overflow-hidden shrink-0 max-w-full"
+          />
+          <div className="text-red-700 text-sm leading-4 ">Log out</div>
+        </button>
       </div>
-    </>
+      {renderSelectedComponent()}
+    </div>
   );
 }

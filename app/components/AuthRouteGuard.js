@@ -28,7 +28,7 @@ const AuthRouteGuard = ({ children }) => {
           window.location.href = '/login'; // Redirect logged-out users from protected routes
         }
       }
-    }, 500); // Adjust the delay time as needed (500 milliseconds)
+    }, 800); // Adjust the delay time as needed (500 milliseconds)
 
     return () => clearTimeout(timer);
   }, [session]);

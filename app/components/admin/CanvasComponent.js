@@ -5,9 +5,12 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 // Import the shape images (make sure the file paths are correct)
-const TableSImage = "https://cdn.discordapp.com/attachments/1170752491944677567/1174041799564742687/table.png?ex=656626a1&is=6553b1a1&hm=4454bf3b031e36727b6c3df1ae2e78a503f7024119b8e0b677697c8e57599b2c&";
-const TableMImage = "https://cdn.discordapp.com/attachments/1170752491944677567/1174041875691348049/table_1.png?ex=656626b3&is=6553b1b3&hm=8a0861ea0123797747af56ec5ff9596aab19af92beb9d2667fca2cf1afd59560&";
-const TableLImage = "https://cdn.discordapp.com/attachments/1170752491944677567/1174041875951386754/table_2.png?ex=656626b3&is=6553b1b3&hm=81958657e35ea4ce362cc85c926f72fe180da605eb8a89c9a12668be2c4c1dc9&";
+const TableSImage =
+  "https://cdn.discordapp.com/attachments/1170752491944677567/1174041799564742687/table.png?ex=656626a1&is=6553b1a1&hm=4454bf3b031e36727b6c3df1ae2e78a503f7024119b8e0b677697c8e57599b2c&";
+const TableMImage =
+  "https://cdn.discordapp.com/attachments/1170752491944677567/1174041875691348049/table_1.png?ex=656626b3&is=6553b1b3&hm=8a0861ea0123797747af56ec5ff9596aab19af92beb9d2667fca2cf1afd59560&";
+const TableLImage =
+  "https://cdn.discordapp.com/attachments/1170752491944677567/1174041875951386754/table_2.png?ex=656626b3&is=6553b1b3&hm=81958657e35ea4ce362cc85c926f72fe180da605eb8a89c9a12668be2c4c1dc9&";
 
 const TABLE_SIZES = ["TableS", "TableM", "TableL"]; // Define the shape names
 
@@ -481,99 +484,103 @@ export default function CanvasComponent() {
   };
 
   return (
-    <div className="flex">
-      <div className="shapes-list p-4">
-        <ul>
-          {TABLE_SIZES.map((shape) => (
-            <li
-              key={shape}
-              className={`mb-4 p-2 cursor-pointer ${
-                selectedShape === shape ? "bg-blue-200" : "bg-gray-200"
-              }`}
-              onClick={() => setSelectedShape(shape)}
-            >
-              <Image
-                src={TABLE_IMAGES[shape]}
-                alt={shape}
-                width={40}
-                height={40}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="canvas-container">
-        <canvas
-          ref={canvasRef}
-          width={canvasWidth}
-          height={canvasHeight}
-          style={{ border: "1px solid #000", borderRadius: "10px" }}
-        />
+    <div className="flex  flex-col mt-20 self-start  w-5/6 ">
+      <div className="overflow-x-auto items-stretch flex flex-col mx-auto">
+        <div className="flex">
+          <div className="shapes-list p-4">
+            <ul>
+              {TABLE_SIZES.map((shape) => (
+                <li
+                  key={shape}
+                  className={`mb-4 p-2 cursor-pointer ${
+                    selectedShape === shape ? "bg-blue-200" : "bg-gray-200"
+                  }`}
+                  onClick={() => setSelectedShape(shape)}
+                >
+                  <Image
+                    src={TABLE_IMAGES[shape]}
+                    alt={shape}
+                    width={40}
+                    height={40}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="canvas-container">
+            <canvas
+              ref={canvasRef}
+              width={canvasWidth}
+              height={canvasHeight}
+              style={{ border: "1px solid #000", borderRadius: "10px" }}
+            />
 
-        <div>
-          <label>Canvas Width:</label>
-          <input
-            type="range"
-            min="100"
-            max="1200"
-            step="10"
-            value={canvasWidth}
-            onChange={(e) => setCanvasWidth(parseInt(e.target.value))}
-          />
-        </div>
-        <div>
-          <label>Canvas Height:</label>
-          <input
-            type="range"
-            min="100"
-            max="1200"
-            step="10"
-            value={canvasHeight}
-            onChange={(e) => setCanvasHeight(parseInt(e.target.value))}
-          />
-        </div>
-        {selectedObject && (
-          <div className="object-details">
-            <p>Table Name:</p>
+            {/* <div>
+            <label>Canvas Width:</label>
             <input
-              type="text"
-              className="border p-2 mb-2"
-              value={tableName}
-              onChange={(e) => setTableName(e.target.value)}
+              type="range"
+              min="100"
+              max="1200"
+              step="10"
+              value={canvasWidth}
+              onChange={(e) => setCanvasWidth(parseInt(e.target.value))}
             />
-            <p>Max People:</p>
+          </div>
+          <div>
+            <label>Canvas Height:</label>
             <input
-              type="number"
-              className="border p-2 mb-2"
-              value={maxPeople}
-              onChange={(e) => setMaxPeople(parseInt(e.target.value))}
+              type="range"
+              min="100"
+              max="1200"
+              step="10"
+              value={canvasHeight}
+              onChange={(e) => setCanvasHeight(parseInt(e.target.value))}
             />
+          </div> */}
+            {selectedObject && (
+              <div className="object-details">
+                <p>Table Name:</p>
+                <input
+                  type="text"
+                  className="border p-2 mb-2"
+                  value={tableName}
+                  onChange={(e) => setTableName(e.target.value)}
+                />
+                <p>Max People:</p>
+                <input
+                  type="number"
+                  className="border p-2 mb-2"
+                  value={maxPeople}
+                  onChange={(e) => setMaxPeople(parseInt(e.target.value))}
+                />
+                <button
+                  onClick={handleSave}
+                  className="m-2 p-2 bg-green-500 text-white"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={handleRemove}
+                  className="m-2 p-2 bg-red-500 text-white"
+                >
+                  Remove Object
+                </button>
+              </div>
+            )}
             <button
-              onClick={handleSave}
-              className="m-2 p-2 bg-green-500 text-white"
+              onClick={handleClearAll}
+              className="m-2 p-2 bg-gray-500 text-white"
             >
-              Save
+              Clear All
             </button>
             <button
-              onClick={handleRemove}
-              className="m-2 p-2 bg-red-500 text-white"
+              onClick={saveObjectsToDatabase}
+              className="m-2 p-2 bg-blue-500 text-white"
             >
-              Remove Object
+              Save Objects
             </button>
           </div>
-        )}
-        <button
-          onClick={handleClearAll}
-          className="m-2 p-2 bg-gray-500 text-white"
-        >
-          Clear All
-        </button>
-        <button
-          onClick={saveObjectsToDatabase}
-          className="m-2 p-2 bg-blue-500 text-white"
-        >
-          Save Objects
-        </button>
+        </div>
       </div>
     </div>
   );

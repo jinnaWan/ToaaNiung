@@ -35,7 +35,7 @@ const getStatusStyle = (status) => {
   }
 };
 
-export default function HistoryBooking() {
+export default function AllBookings() {
   const { data: session } = useSession();
   const router = useRouter();
   const [bookings, setBookings] = useState([]);
@@ -43,12 +43,31 @@ export default function HistoryBooking() {
   const [isCancellationMode, setIsCancellationMode] = useState(true);
   const [loading, setLoading] = useState(true); // State to track loading
 
+  const handleStatusChange = async (bookingId, newStatus) => {
+    try {
+      const response = await axios.put(`/api/admin`, {
+        bookingId: bookingId,
+        newStatus: newStatus,
+      });
+
+      if (response.status === 200) {
+        toast.success("Booking status updated successfully");
+        // You might want to refresh the bookings after updating the status
+        // Implement a function to refresh bookings or refetch the bookings here
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000); // Wait for 1 second before refreshing the page
+      }
+    } catch (error) {
+      console.error("Error updating booking status:", error);
+      toast.error("Error updating booking status");
+    }
+  };
+
   useEffect(() => {
     const fetchUserBookings = async () => {
       try {
-        const response = await axios.get("/api/user", {
-          params: { data: JSON.stringify({ email: session?.user?.email }) },
-        });
+        const response = await axios.get("/api/admin");
 
         setBookings(response.data);
         setLoading(false); // Update loading state after fetching
@@ -65,21 +84,21 @@ export default function HistoryBooking() {
 
   const handleConfirmCancel = async () => {
     try {
-      const response = await axios.post("/api/user", {
+      const response = await axios.post("/api/admin", {
         selectedBookings, // Sending selectedBookings data to the server
       });
 
       if (response.status === 200) {
-        toast.success("Booking canceled successfully");
+        toast.success("Booking deleted successfully");
         setTimeout(() => {
           window.location.reload();
         }, 1000); // Wait for 1 second before refreshing the page
       }
       // Optionally, perform any additional actions after successful POST request
     } catch (error) {
-      console.error("Error confirming booking cancellation:", error);
+      console.error("Error confirming booking deletation:", error);
       // Handle errors here
-      toast.error("Error canceling booking");
+      toast.error("Error deleting booking");
     }
   };
 
@@ -128,7 +147,7 @@ export default function HistoryBooking() {
                 className="text-white text-xs font-bold rounded shadow-md bg-red-500 hover:bg-red-400 my-auto px-3 py-2"
                 onClick={handleCancelReservation}
               >
-                Cancel reservation
+                Delete reservation
               </button>
             ))}
         </div>
@@ -142,7 +161,7 @@ export default function HistoryBooking() {
           <thead>
             <tr>
               {!isCancellationMode && (
-                <th className="text-zinc-800  text-sm px-8 pb-4"></th>
+                <th className="text-zinc-800  text-sm px-6 pb-4"></th>
               )}
               {bookings.length > 0 &&
                 Object.keys(bookings[0]).map((header, index) => {
@@ -150,7 +169,7 @@ export default function HistoryBooking() {
                     return (
                       <th
                         key={index}
-                        className="text-zinc-800  text-sm px-8 pb-4"
+                        className="text-zinc-800  text-sm px-6 pb-4"
                       >
                         <div className="flex items-center justify-center gap-2">
                           <div className="text-stone-500 text-xs font-medium opacity-70">
@@ -176,8 +195,8 @@ export default function HistoryBooking() {
                 key={rowIndex}
                 className="bg-white h-12 border border-b-8 border-neutral-50"
               >
-                {booking.status === "In Progress" && !isCancellationMode ? (
-                  <td className="text-center text-zinc-800 text-sm px-10">
+                {!isCancellationMode ? (
+                  <td className="text-center text-zinc-800 text-sm px-6">
                     <input
                       type="checkbox"
                       style={{
@@ -191,7 +210,7 @@ export default function HistoryBooking() {
                   </td>
                 ) : (
                   !isCancellationMode && (
-                    <td className="text-center text-zinc-800 text-sm px-10"></td>
+                    <td className="text-center text-zinc-800 text-sm px-6"></td>
                   )
                 )}
                 {Object.entries(booking).map(([key, value], colIndex) => {
@@ -199,7 +218,7 @@ export default function HistoryBooking() {
                     return (
                       <td
                         key={colIndex}
-                        className={`text-center text-zinc-800 text-sm px-16 ${
+                        className={`text-center text-zinc-800 text-sm px-10 ${
                           colIndex !== 0 ? "" : ""
                         }`}
                       >
@@ -207,18 +226,32 @@ export default function HistoryBooking() {
                           new Date(value).toLocaleString()
                         ) : key === "status" ? (
                           // Inside the component where the status is displayed
-                          <div
-                            className={`text-${
-                              getStatusStyle(value).color
-                            } text-sm px-3 py-1 font-medium whitespace-nowrap`}
+                          <select
+                            value={value}
+                            onChange={(e) =>
+                              handleStatusChange(booking.id, e.target.value)
+                            }
+                            className="rounded-full text-white text-sm px-3 py-1 font-medium"
                             style={{
                               backgroundColor:
                                 getStatusStyle(value).backgroundColor,
-                              borderRadius: "33px",
                             }}
                           >
-                            {value}
-                          </div>
+                            {["In Progress", "Completed", "Cancelled"].map(
+                              (status, index) => (
+                                <option
+                                  key={index}
+                                  value={status}
+                                  style={{
+                                    backgroundColor:
+                                      getStatusStyle(status).backgroundColor,
+                                  }}
+                                >
+                                  {status}
+                                </option>
+                              )
+                            )}
+                          </select>
                         ) : (
                           value
                         )}
@@ -238,7 +271,7 @@ export default function HistoryBooking() {
               className="text-white text-xs font-bold rounded shadow-md bg-red-500 hover:bg-red-400  my-auto px-3 py-2 "
               onClick={handleConfirmCancel}
             >
-              Confirm Cancel
+              Confirm Delete
             </button>
           )}
         </div>

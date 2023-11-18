@@ -12,7 +12,11 @@ export default function MyProfile() {
   const { data: session } = useSession();
   const isAdmin = session?.user.isAdmin;
   const router = useRouter();
-  const [selectedMenu, setSelectedMenu] = React.useState("editprofile");
+  const [selectedMenu, setSelectedMenu] = useState(() => {
+    // Retrieve the selectedMenu from localStorage on initial load
+    const storedSelectedMenu = localStorage.getItem('selectedMenu');
+    return storedSelectedMenu || 'editprofile'; // Default value if nothing is stored
+  });
 
   const handleSignOut = async () => {
     try {
@@ -39,14 +43,25 @@ export default function MyProfile() {
   };
 
   const handleMenuClick = (menu) => (e) => {
-    e.preventDefault(); // Prevent the default behavior (page reload)
+    e.preventDefault();
     setSelectedMenu(menu);
+
+    // Save selectedMenu to localStorage when it changes
+    localStorage.setItem('selectedMenu', menu);
+  };
+
+  const navigateToFindTable = () => {
+    router.push('/findtable'); // Navigating to the '/findtable' route
+  };
+
+  const navigateToAdmin = () => {
+    router.push('/admin'); // Navigating to the '/admin' route
   };
 
   return (
     <div className="bg-neutral-50 flex justify-items-stretch flex-wrap">
       <div className="justify-center items-center bg-white flex grow basis-[0%] flex-col pl-14 pr-14 pt-8 pb-14  w-1/6">
-        <div className="justify-center items-center flex w-[165px]  gap-2">
+        <div className="justify-center items-center flex w-[165px]  gap-2" onClick={navigateToFindTable}>
           <img
             loading="lazy"
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/a4f46fc9-225b-4054-b183-d941c03f58d4?"
@@ -72,19 +87,30 @@ export default function MyProfile() {
             <div className="text-zinc-800 text-base font-medium leading-5 self-center whitespace-nowrap">
               {session?.user.email}
             </div>
+            <div className={`text-neutral-900 self-center text-xs leading-4 tracking-tight whitespace-nowrap justify-center items-stretch mt-1 px-1.5 rounded-3xl ${isAdmin ? 'bg-blue-200' : 'bg-orange-300'}`}>
+              {isAdmin ? 'Admin' : 'Guest'}
+            </div>
           </div>
 
           <a onClick={handleMenuClick("historybooking")} href="#">
-            <div className="text-zinc-800 text-base font-medium leading-5 mt-16 hover:bg-gray-200">
+            <div className="text-zinc-800 text-base font-medium leading-4 mt-14 py-2 px-1 rounded-lg hover:bg-gray-200">
               History Booking
             </div>
           </a>
 
           <a onClick={handleMenuClick("settingsprofile")} href="#">
-            <div className="text-zinc-800 text-base font-medium leading-5 mt-9 hover:bg-gray-200">
+            <div className="text-zinc-800 text-base font-medium leading-4 mt-5 py-2 px-1 rounded-lg hover:bg-gray-200">
               Settings Profile
             </div>
           </a>
+
+          {isAdmin && (
+              <a onClick={navigateToAdmin} href="#">
+                <div className="text-zinc-800 text-base font-medium leading-4 mt-5 py-2 px-1 rounded-lg hover:bg-gray-200">
+                  Admin
+                </div>
+              </a>
+            )}
         </div>
 
         <button
