@@ -11,11 +11,11 @@ export default function Admin() {
   const { data: session } = useSession();
   const isAdmin = session?.user.isAdmin;
   const router = useRouter();
+  const [storedSelectedMenu, setStoredSelectedMenu] = useState(None);
   const [selectedMenu, setSelectedMenu] = useState(() => {
-    const storedSelectedMenu = None;
     if (typeof window !== "undefined") {
       // Retrieve the selectedMenu from localStorage on initial load
-      storedSelectedMenu = localStorage.getItem("selectedMenu");
+      setStoredSelectedMenu(localStorage.getItem("selectedMenu"));
     }
     return storedSelectedMenu || "allbooking"; // Default value if nothing is stored
   });
