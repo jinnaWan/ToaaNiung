@@ -6,7 +6,7 @@ import AuthRouteGuard from "../components/AuthRouteGuard";
 export default function Provider({ children }) {
   return (
     <SessionProvider>
-      <AuthRouteGuard protectedRoutes={["/login", "/register"]}>
+      <AuthRouteGuard>
         {children}
       </AuthRouteGuard>
     </SessionProvider>

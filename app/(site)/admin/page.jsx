@@ -35,13 +35,13 @@ export default function Admin() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (session && session.user.isAdmin) {
-      // User is an admin, do nothing
-    } else if (session) {
-      router.push("/findtable"); // Redirect non-admin users to the homepage
-    }
-  }, [session, router]);
+  // useEffect(() => {
+  //   if (session && session.user.isAdmin) {
+  //     // User is an admin, do nothing
+  //   } else if (session) {
+  //     router.push("/findtable"); // Redirect non-admin users to the homepage
+  //   }
+  // }, [session, router]);
   
 
   const handleSignOut = async () => {
