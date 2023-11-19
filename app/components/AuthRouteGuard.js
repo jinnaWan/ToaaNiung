@@ -31,29 +31,29 @@ const AuthRouteGuard = ({ children }) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (!isInitialMount.current) {
-  //     const timer = setInterval(() => {
-  //       sendThailandTimeToDatabase(); // Send Thailand time to the database every minute
-  //     }, 60000); // Send data every minute (60000 milliseconds)
-
-  //     return () => clearInterval(timer);
-  //   }
-
-  //   isInitialMount.current = false;
-
-  //   return undefined; // No cleanup needed for the initial mount
-  // }, []);
-
   useEffect(() => {
     if (!isInitialMount.current) {
-      sendThailandTimeToDatabase(); // Send Thailand time to the database on mount
+      const timer = setInterval(() => {
+        sendThailandTimeToDatabase(); // Send Thailand time to the database every minute
+      }, 60000); // Send data every minute (60000 milliseconds)
+
+      return () => clearInterval(timer);
     }
 
     isInitialMount.current = false;
 
     return undefined; // No cleanup needed for the initial mount
   }, []);
+
+  // useEffect(() => {
+  //   if (!isInitialMount.current) {
+  //     sendThailandTimeToDatabase(); // Send Thailand time to the database on mount
+  //   }
+
+  //   isInitialMount.current = false;
+
+  //   return undefined; // No cleanup needed for the initial mount
+  // }, []);
 
   useEffect(() => {
     if (isInitialMount.current) {
