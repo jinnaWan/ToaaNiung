@@ -8,7 +8,7 @@ export async function POST(req) {
     await mongooseConnect();
     const data = await req.json();
     const { thailandTime } = data;
-    // console.log(thailandTime);
+    console.log(thailandTime);
 
     // Fetch bookings that match the criteria
     const thirtyMinutesAgo = new Date(new Date(thailandTime) - 30 * 60 * 1000); // 30 minutes ago
@@ -16,14 +16,21 @@ export async function POST(req) {
       status: "In Progress",
       arrivalTime: { $lte: thirtyMinutesAgo }
     });
+    console.log(bookingsToUpdate);
 
-    // Update user penalties and status if necessary
+    // Group bookings by userEmail and count the number of bookings for each user
+    const bookingsByUser = bookingsToUpdate.reduce((acc, booking) => {
+      acc[booking.userEmail] = (acc[booking.userEmail] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Update user penalties and status based on the number of bookings found
     await Promise.all(
-      bookingsToUpdate.map(async (booking) => {
-        const user = await User.findOne({ email: booking.userEmail });
+      Object.entries(bookingsByUser).map(async ([userEmail, bookingCount]) => {
+        const user = await User.findOne({ email: userEmail });
 
         if (user) {
-          user.penalty += 1;
+          user.penalty += bookingCount; // Increment penalty by the number of bookings
           if (user.penalty >= 3) {
             user.status = "Banned";
           }
@@ -31,9 +38,16 @@ export async function POST(req) {
           await user.save();
         }
 
-        // Update the booking status to "Cancelled"
-        booking.status = "Cancelled";
-        await booking.save();
+        // Update the booking status to "Cancelled" for each booking
+        const userBookings = bookingsToUpdate.filter(
+          (booking) => booking.userEmail === userEmail
+        );
+        await Promise.all(
+          userBookings.map(async (booking) => {
+            booking.status = "Cancelled";
+            await booking.save();
+          })
+        );
       })
     );
 
@@ -46,3 +60,4 @@ export async function POST(req) {
     );
   }
 }
+

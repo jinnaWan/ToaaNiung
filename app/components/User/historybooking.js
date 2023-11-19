@@ -106,6 +106,16 @@ export default function HistoryBooking() {
     setSelectedBookings([]);
   };
 
+  const formatThailandTime = (date) => {
+    if (!(date instanceof Date)) {
+      date = new Date(date); // Convert to Date object if not already
+    }
+
+    const thailandTime = new Date(date.getTime() - 7 * 60 * 60 * 1000);
+
+    return thailandTime.toLocaleString();
+  };
+
   return (
     <div className="flex  flex-col mt-20 self-start  w-5/6 ">
       <div className="overflow-x-auto items-stretch flex flex-col mx-auto">
@@ -208,7 +218,8 @@ export default function HistoryBooking() {
                         }`}
                       >
                         {key === "arrivalTime" ? (
-                          new Date(value).toLocaleString()
+                          // Apply the Thailand time zone offset
+                          formatThailandTime(value) // Format the arrival time to Thailand time
                         ) : key === "status" ? (
                           // Inside the component where the status is displayed
                           <div
