@@ -43,79 +43,88 @@ export default function MyProfile() {
   };
 
   const navigateToFindTable = () => {
-    router.push('/findtable'); // Navigating to the '/findtable' route
+    router.push("/findtable"); // Navigating to the '/findtable' route
   };
 
   const navigateToAdmin = () => {
-    router.push('/admin'); // Navigating to the '/admin' route
+    router.push("/admin"); // Navigating to the '/admin' route
   };
 
   return (
     <div className="bg-neutral-50 flex justify-items-stretch flex-wrap">
-      <div className="justify-center items-center bg-white flex grow basis-[0%] flex-col pl-14 pr-14 pt-8 pb-14  w-1/6">
-        <div className="justify-center items-center flex w-[165px]  gap-2" onClick={navigateToFindTable}>
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/014f9ad4-f36d-414c-98c6-5777cbc9d5a8?"
-            className="aspect-square object-contain object-center w-14 justify-center items-center overflow-hidden shrink-0 max-w-full my-auto"
-          />
-          <div className="text-zinc-800 text-center text-4xl leading-10 font-Belleza">
-            TOAA
-            <br />
-            NIUNG
-          </div>
-        </div>
-
-        <div className="justify-center items-center flex w-[165px] max-w-full flex-col mt-36 max-md:mt-10 font-DMSans font-medium">
-          <div className="items-stretch flex flex-col px-2">
+      <div className="justify-center items-center  bg-white   pl-14 pr-14 pt-8 pb-14  w-1/6">
+        <div className="flex flex-col  grow basis-[0%] justify-center items-center">
+          <div
+            className="justify-center items-center flex w-[165px]  gap-2"
+            onClick={navigateToFindTable}
+          >
             <img
               loading="lazy"
-              srcSet="https://cdn.discordapp.com/attachments/799566223628173316/1173622367034015824/585e4beacb11b227491c3399.png?ex=6564a001&is=65522b01&hm=ec1ac578a8898cd9cb8d0a17d439d9fba621106b98c499b121b13c237e9d119a&"
-              className="aspect-square object-contain object-center w-[95px] overflow-hidden self-center max-w-full rounded-[50%] bg-black"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/014f9ad4-f36d-414c-98c6-5777cbc9d5a8?"
+              className="aspect-square object-contain object-center w-14 justify-center items-center overflow-hidden shrink-0 max-w-full my-auto"
             />
-            <div className="text-black text-center text-2xl font-medium leading-8 mt-2.5">
-              {session?.user.name}
-            </div>
-            <div className="text-zinc-800 text-base font-medium leading-5 self-center whitespace-nowrap">
-              {session?.user.email}
-            </div>
-            <div className={`text-neutral-900 self-center text-xs leading-4 tracking-tight whitespace-nowrap justify-center items-stretch mt-1 px-1.5 rounded-3xl ${isAdmin ? 'bg-blue-200' : 'bg-orange-300'}`}>
-              {isAdmin ? 'Admin' : 'Guest'}
+            <div className="text-zinc-800 text-center text-4xl leading-10 font-Belleza">
+              TOAA
+              <br />
+              NIUNG
             </div>
           </div>
 
-          <a onClick={handleMenuClick("historybooking")} href="#">
-            <div className="text-zinc-800 text-base font-medium leading-4 mt-14 py-2 px-1 rounded-lg hover:bg-gray-200">
-              History Booking
+          <div className="justify-center items-center flex w-[165px] max-w-full flex-col mt-36 max-md:mt-10 font-DMSans font-medium">
+            <div className="items-stretch flex flex-col px-2">
+              <img
+                loading="lazy"
+                srcSet="https://cdn.discordapp.com/attachments/799566223628173316/1173622367034015824/585e4beacb11b227491c3399.png?ex=6564a001&is=65522b01&hm=ec1ac578a8898cd9cb8d0a17d439d9fba621106b98c499b121b13c237e9d119a&"
+                className="aspect-square object-contain object-center w-[95px] overflow-hidden self-center max-w-full rounded-[50%] bg-black"
+              />
+              <div className="text-black text-center text-2xl font-medium leading-8 mt-2.5">
+                {session?.user.name}
+              </div>
+              <div className="text-zinc-800 text-base font-medium leading-5 self-center whitespace-nowrap">
+                {session?.user.email}
+              </div>
+              <div
+                className={`text-neutral-900 self-center text-xs leading-4 tracking-tight whitespace-nowrap justify-center items-stretch mt-1 px-1.5 rounded-3xl ${
+                  isAdmin ? "bg-blue-200" : "bg-orange-300"
+                }`}
+              >
+                {isAdmin ? "Admin" : "Guest"}
+              </div>
             </div>
-          </a>
 
-          <a onClick={handleMenuClick("settingsprofile")} href="#">
-            <div className="text-zinc-800 text-base font-medium leading-4 mt-5 py-2 px-1 rounded-lg hover:bg-gray-200">
-              Settings Profile
-            </div>
-          </a>
+            <a onClick={handleMenuClick("historybooking")} href="#">
+              <div className="text-zinc-800 text-base font-medium leading-4 mt-14 py-2 px-1 rounded-lg hover:bg-gray-200">
+                History Booking
+              </div>
+            </a>
 
-          {isAdmin && (
+            <a onClick={handleMenuClick("settingsprofile")} href="#">
+              <div className="text-zinc-800 text-base font-medium leading-4 mt-5 py-2 px-1 rounded-lg hover:bg-gray-200">
+                Settings Profile
+              </div>
+            </a>
+
+            {isAdmin && (
               <a onClick={navigateToAdmin} href="#">
                 <div className="text-zinc-800 text-base font-medium leading-4 mt-5 py-2 px-1 rounded-lg hover:bg-gray-200">
                   Admin
                 </div>
               </a>
             )}
-        </div>
+          </div>
 
-        <button
-          onClick={handleSignOut}
-          className="justify-center  items-center self-stretch flex  gap-3 mt-10 rounded-3xl hover:bg-gray-200 h-9 w-full"
-        >
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/80e5d952-8074-4bbb-afd0-cbda96cffb7d?"
-            className="aspect-square object-contain object-center w-4 overflow-hidden shrink-0 max-w-full"
-          />
-          <div className="text-red-700 text-sm leading-4 ">Log out</div>
-        </button>
+          <button
+            onClick={handleSignOut}
+            className="justify-center  items-center self-stretch flex  gap-3 mt-10 rounded-3xl hover:bg-gray-200 h-9 w-full"
+          >
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/80e5d952-8074-4bbb-afd0-cbda96cffb7d?"
+              className="aspect-square object-contain object-center w-4 overflow-hidden shrink-0 max-w-full"
+            />
+            <div className="text-red-700 text-sm leading-4 ">Log out</div>
+          </button>
+        </div>
       </div>
       {renderSelectedComponent()}
     </div>
