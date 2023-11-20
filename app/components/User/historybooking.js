@@ -149,7 +149,7 @@ export default function HistoryBooking() {
 
   return (
     <div className="flex  flex-col mt-20 self-start  w-5/6 ">
-      <div className="overflow-x-auto items-stretch flex flex-col mx-auto">
+      <div className="overflow-x-auto items-stretch flex flex-col mx-auto font-DMSans">
         <div className="justify-between items-stretch flex w-full gap-5 max-md:max-w-full max-md:flex-wrap">
           <div className="items-stretch flex grow basis-[0%] flex-col px-5">
             <div className="text-zinc-800 text-4xl font-semibold whitespace-nowrap mr-5">

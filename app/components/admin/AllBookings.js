@@ -53,12 +53,12 @@ export default function AllBookings() {
 
   const handleSearchChange = (e) => {
     if (!searchHeader) {
-      toast.error('Please select a search option');
+      toast.error("Please select a search option");
       return;
     }
-  
+
     const searchTerm = e.target.value.toLowerCase();
-  
+
     setSearchTerm(searchTerm);
     if (searchHeader) {
       const filteredResults = bookings.filter((booking) =>
@@ -75,7 +75,6 @@ export default function AllBookings() {
       setFilteredBookings(filteredResults);
     }
   };
-  
 
   const handleHeaderSelect = (selectedHeader) => {
     setSearchHeader(selectedHeader);
@@ -226,7 +225,7 @@ export default function AllBookings() {
   return (
     <div className="flex  flex-col mt-20 self-start  w-5/6 ">
       <div className="overflow-x-auto items-stretch flex flex-col mx-auto">
-        <div className="justify-between items-stretch flex w-full gap-5 max-md:max-w-full max-md:flex-wrap">
+        <div className="justify-between items-stretch flex w-full gap-5 max-md:max-w-full max-md:flex-wrap font-DMSans">
           <div className="items-stretch flex grow basis-[0%] flex-col px-5">
             <div className="text-zinc-800 text-4xl font-semibold whitespace-nowrap mr-5">
               Booking history
@@ -253,22 +252,25 @@ export default function AllBookings() {
               </button>
             ))}
         </div>
-        <div className="justify-between items-stretch flex w-full gap-5 max-md:max-w-full max-md:flex-wrap">
+        <div className="justify-between items-stretch flex w-full gap-5 max-md:max-w-full max-md:flex-wrap font-DMSans">
           {/* insert your search code here */}
-          <div className="items-stretch flex gap-2">
+
+          <div className="items-stretch flex mt-7 gap-2 w-full px-5 text-base">
             <input
               type="text"
               placeholder="Search..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="border rounded px-2 py-1 focus:outline-none"
+              className="border rounded-lg px-3 py-2 w-2/5 focus:outline-none text-sm"
+              style={{ fontWeight: "normal" }} // Apply font weight inline
             />
             <select
               value={searchHeader}
               onChange={(e) => handleHeaderSelect(e.target.value)}
-              className="border rounded px-2 py-1 focus:outline-none"
+              className="border rounded-lg px-3 py-2 focus:outline-none text-sm"
+              style={{ fontWeight: "normal" }} // Apply font weight inline
             >
-              <option value="">Select header</option>
+              <option value="" className="text-white">Select header...</option>
               {bookings.length > 0 &&
                 Object.keys(bookings[0]).map((header, index) => {
                   if (header !== "id") {
@@ -334,7 +336,7 @@ export default function AllBookings() {
             {filteredBookings.map((booking, rowIndex) => (
               <tr
                 key={rowIndex}
-                className="bg-white h-12 border border-b-8 border-neutral-50"
+                className="bg-white h-12 border border-b-8 border-neutral-50 rounded-lg"
               >
                 {!isCancellationMode ? (
                   <td className="text-center text-zinc-800 text-sm px-6">
@@ -359,7 +361,7 @@ export default function AllBookings() {
                     return (
                       <td
                         key={colIndex}
-                        className={`text-center text-zinc-800 text-sm px-10 ${
+                        className={`text-center rounded-l-lg text-zinc-800 text-sm px-10 ${
                           colIndex !== 0 ? "" : ""
                         }`}
                       >
@@ -410,7 +412,7 @@ export default function AllBookings() {
           {!isCancellationMode && (
             <button
               href="#"
-              className="text-white text-xs font-bold rounded shadow-md bg-red-500 hover:bg-red-400  my-auto px-3 py-2 "
+              className="text-white text-xs font-bold font-DMSans rounded shadow-md bg-red-500 hover:bg-red-400  my-auto px-3 py-2 "
               onClick={handleConfirmCancel}
             >
               Confirm Delete
