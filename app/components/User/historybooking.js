@@ -42,6 +42,37 @@ export default function HistoryBooking() {
   const [selectedBookings, setSelectedBookings] = useState([]);
   const [isCancellationMode, setIsCancellationMode] = useState(true);
   const [loading, setLoading] = useState(true); // State to track loading
+  // Define state for sorting
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: "ascending",
+  });
+
+  // Function to handle header click for sorting
+  const handleHeaderClick = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  // Function to perform actual sorting based on sortConfig
+  const sortedBookings = React.useMemo(() => {
+    const sortableBookings = [...bookings];
+    if (sortConfig.key) {
+      sortableBookings.sort((a, b) => {
+        let comparison = 0;
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          comparison = 1;
+        } else if (a[sortConfig.key] < b[sortConfig.key]) {
+          comparison = -1;
+        }
+        return sortConfig.direction === "ascending" ? comparison : -comparison;
+      });
+    }
+    return sortableBookings;
+  }, [bookings, sortConfig]);
 
   useEffect(() => {
     const fetchUserBookings = async () => {
@@ -164,16 +195,25 @@ export default function HistoryBooking() {
                     return (
                       <th
                         key={index}
-                        className="text-zinc-800  text-sm px-8 pb-4"
+                        className="text-zinc-800  text-sm px-6 pb-4"
+                        onClick={() => handleHeaderClick(header)} // Handle header click
                       >
                         <div className="flex items-center justify-center gap-2">
                           <div className="text-stone-500 text-xs font-medium opacity-70">
                             {header}
                           </div>
+                          {/* Rotate the image based on sortConfig */}
                           <img
                             loading="lazy"
                             src={headerIconSrc}
-                            className="aspect-[1.2] object-contain object-center w-1.5 opacity-70 overflow-hidden self-start shrink-0 max-w-full my-auto"
+                            className={`aspect-[1.2] object-contain object-center w-1.5 opacity-70 overflow-hidden self-start shrink-0 max-w-full my-auto transform ${
+                              sortConfig.key === header
+                                ? sortConfig.direction === "ascending"
+                                  ? "rotate-180"
+                                  : "rotate-0"
+                                : ""
+                            }`}
+                            alt="Sort Icon"
                           />
                         </div>
                       </th>
@@ -185,7 +225,7 @@ export default function HistoryBooking() {
           </thead>
 
           <tbody>
-            {bookings.map((booking, rowIndex) => (
+            {sortedBookings.map((booking, rowIndex) => (
               <tr
                 key={rowIndex}
                 className="bg-white h-12 border border-b-8 border-neutral-50"

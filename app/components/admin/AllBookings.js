@@ -42,6 +42,88 @@ export default function AllBookings() {
   const [selectedBookings, setSelectedBookings] = useState([]);
   const [isCancellationMode, setIsCancellationMode] = useState(true);
   const [loading, setLoading] = useState(true); // State to track loading
+  // Define state for sorting
+  const [sortConfig, setSortConfig] = useState({
+    key: null,
+    direction: "ascending",
+  });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchHeader, setSearchHeader] = useState(""); // State to track the selected header for filtering
+  const [filteredBookings, setFilteredBookings] = useState([]);
+
+  const handleSearchChange = (e) => {
+    if (!searchHeader) {
+      toast.error('Please select a search option');
+      return;
+    }
+  
+    const searchTerm = e.target.value.toLowerCase();
+  
+    setSearchTerm(searchTerm);
+    if (searchHeader) {
+      const filteredResults = bookings.filter((booking) =>
+        booking[searchHeader].toString().toLowerCase().includes(searchTerm)
+      );
+      setFilteredBookings(filteredResults);
+    } else {
+      // If searchHeader is not selected, apply search to sortedBookings
+      const filteredResults = sortedBookings.filter((booking) =>
+        Object.values(booking).some(
+          (value) => value.toString().toLowerCase().indexOf(searchTerm) > -1
+        )
+      );
+      setFilteredBookings(filteredResults);
+    }
+  };
+  
+
+  const handleHeaderSelect = (selectedHeader) => {
+    setSearchHeader(selectedHeader);
+    setSearchTerm("");
+    // Reset to original bookings if search header is cleared
+    if (!selectedHeader) {
+      setBookings(sortedBookings);
+    }
+  };
+
+  // Function to handle header click for sorting
+  const handleHeaderClick = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  // Function to perform actual sorting based on sortConfig
+  const sortedBookings = React.useMemo(() => {
+    const sortableBookings = [...bookings];
+    if (sortConfig.key) {
+      sortableBookings.sort((a, b) => {
+        let comparison = 0;
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          comparison = 1;
+        } else if (a[sortConfig.key] < b[sortConfig.key]) {
+          comparison = -1;
+        }
+        return sortConfig.direction === "ascending" ? comparison : -comparison;
+      });
+    }
+    return sortableBookings;
+  }, [bookings, sortConfig]);
+
+  // Use useEffect to update filteredBookings when sortConfig or bookings change
+  useEffect(() => {
+    if (searchTerm && searchHeader) {
+      const filteredResults = bookings.filter((booking) =>
+        booking[searchHeader].toString().toLowerCase().includes(searchTerm)
+      );
+      setFilteredBookings(filteredResults);
+    } else {
+      // Update filteredBookings with sortedBookings
+      setFilteredBookings(sortedBookings);
+    }
+  }, [searchTerm, searchHeader, bookings, sortedBookings]);
 
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
@@ -171,6 +253,36 @@ export default function AllBookings() {
               </button>
             ))}
         </div>
+        <div className="justify-between items-stretch flex w-full gap-5 max-md:max-w-full max-md:flex-wrap">
+          {/* insert your search code here */}
+          <div className="items-stretch flex gap-2">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="border rounded px-2 py-1 focus:outline-none"
+            />
+            <select
+              value={searchHeader}
+              onChange={(e) => handleHeaderSelect(e.target.value)}
+              className="border rounded px-2 py-1 focus:outline-none"
+            >
+              <option value="">Select header</option>
+              {bookings.length > 0 &&
+                Object.keys(bookings[0]).map((header, index) => {
+                  if (header !== "id") {
+                    return (
+                      <option key={index} value={header}>
+                        {header}
+                      </option>
+                    );
+                  }
+                  return null; // Exclude "id" from options
+                })}
+            </select>
+          </div>
+        </div>
         <table className="min-w-full mx-auto  mt-6 font-DMSans">
           <colgroup>
             {bookings.length > 0 &&
@@ -190,15 +302,24 @@ export default function AllBookings() {
                       <th
                         key={index}
                         className="text-zinc-800  text-sm px-6 pb-4"
+                        onClick={() => handleHeaderClick(header)} // Handle header click
                       >
                         <div className="flex items-center justify-center gap-2">
                           <div className="text-stone-500 text-xs font-medium opacity-70">
                             {header}
                           </div>
+                          {/* Rotate the image based on sortConfig */}
                           <img
                             loading="lazy"
                             src={headerIconSrc}
-                            className="aspect-[1.2] object-contain object-center w-1.5 opacity-70 overflow-hidden self-start shrink-0 max-w-full my-auto"
+                            className={`aspect-[1.2] object-contain object-center w-1.5 opacity-70 overflow-hidden self-start shrink-0 max-w-full my-auto transform ${
+                              sortConfig.key === header
+                                ? sortConfig.direction === "ascending"
+                                  ? "rotate-180"
+                                  : "rotate-0"
+                                : ""
+                            }`}
+                            alt="Sort Icon"
                           />
                         </div>
                       </th>
@@ -210,7 +331,7 @@ export default function AllBookings() {
           </thead>
 
           <tbody>
-            {bookings.map((booking, rowIndex) => (
+            {filteredBookings.map((booking, rowIndex) => (
               <tr
                 key={rowIndex}
                 className="bg-white h-12 border border-b-8 border-neutral-50"
