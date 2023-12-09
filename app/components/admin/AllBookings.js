@@ -51,6 +51,7 @@ export default function AllBookings() {
   const [searchHeader, setSearchHeader] = useState(""); // State to track the selected header for filtering
   const [filteredBookings, setFilteredBookings] = useState([]);
 
+  // Handles user search input change
   const handleSearchChange = (e) => {
     if (!searchHeader) {
       toast.error("Please select a search option");
@@ -76,6 +77,7 @@ export default function AllBookings() {
     }
   };
 
+  // Handles header selection for search filtering
   const handleHeaderSelect = (selectedHeader) => {
     setSearchHeader(selectedHeader);
     setSearchTerm("");
@@ -124,6 +126,7 @@ export default function AllBookings() {
     }
   }, [searchTerm, searchHeader, bookings, sortedBookings]);
 
+  // Handles status change for a booking
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
       const response = await axios.put(`/api/admin`, {
@@ -152,6 +155,7 @@ export default function AllBookings() {
     }
   };
 
+  // Fetches user bookings based on the session
   useEffect(() => {
     const fetchUserBookings = async () => {
       try {
@@ -170,6 +174,7 @@ export default function AllBookings() {
     }
   }, [session]);
 
+  // Handles confirmation for booking deletion
   const handleConfirmCancel = async () => {
     try {
       const response = await axios.post("/api/admin", {
@@ -193,6 +198,7 @@ export default function AllBookings() {
     }
   };
 
+  // Handles checkbox change for selected bookings
   const handleCheckboxChange = (bookingId) => {
     setSelectedBookings((prevSelected) => {
       if (prevSelected.includes(bookingId)) {
@@ -212,6 +218,7 @@ export default function AllBookings() {
     setSelectedBookings([]);
   };
 
+  // Formats date to Thailand time zone
   const formatThailandTime = (date) => {
     if (!(date instanceof Date)) {
       date = new Date(date); // Convert to Date object if not already

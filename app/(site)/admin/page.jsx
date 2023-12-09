@@ -13,6 +13,7 @@ export default function Admin() {
   const router = useRouter();
   const [selectedMenu, setSelectedMenu] = React.useState("allbooking");
 
+  // Function to handle user sign out
   const handleSignOut = async () => {
     try {
       const result = await signOut({ redirect: false }); // Use { redirect: false } to prevent automatic redirection
@@ -29,6 +30,7 @@ export default function Admin() {
     }
   };
 
+  // Function to render the selected component based on menu choice
   const renderSelectedComponent = () => {
     if (selectedMenu === "allbooking") {
       return <AllBookings />;
@@ -37,6 +39,7 @@ export default function Admin() {
     }
   };
 
+  // Functions to handle menu clicks and navigation
   const handleMenuClick = (menu) => (e) => {
     e.preventDefault(); // Prevent the default behavior (page reload)
     setSelectedMenu(menu);

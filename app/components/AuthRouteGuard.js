@@ -3,8 +3,13 @@ import { useSession } from 'next-auth/react';
 import axios from 'axios';
 
 const AuthRouteGuard = ({ children }) => {
+  // Access session data using next-auth's useSession hook
   const { data: session } = useSession();
+  
+  // Ref to track the initial mount of the component
   const isInitialMount = useRef(true);
+
+  // Function to get the current date and time in Thailand timezone
   const getCurrentDateTime = () => {
     const now = new Date();
     const thailandOffset = 7 * 60; // Thailand is UTC+7
@@ -20,6 +25,7 @@ const AuthRouteGuard = ({ children }) => {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
+  // Function to send Thailand time to the database
   const sendThailandTimeToDatabase = async () => {
     try {
       const thailandTime = getCurrentDateTime();
@@ -31,6 +37,7 @@ const AuthRouteGuard = ({ children }) => {
     }
   };
 
+  // useEffect to send Thailand time to the database periodically
   useEffect(() => {
     if (!isInitialMount.current) {
       const timer = setInterval(() => {
@@ -45,16 +52,7 @@ const AuthRouteGuard = ({ children }) => {
     return undefined; // No cleanup needed for the initial mount
   }, []);
 
-  // useEffect(() => {
-  //   if (!isInitialMount.current) {
-  //     sendThailandTimeToDatabase(); // Send Thailand time to the database on mount
-  //   }
-
-  //   isInitialMount.current = false;
-
-  //   return undefined; // No cleanup needed for the initial mount
-  // }, []);
-
+  // useEffect for route protection based on user session
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;

@@ -12,6 +12,7 @@ export default function Login() {
     password: "",
   });
 
+  // Function to handle user login
   const loginUser = async (e) => {
     e.preventDefault();
     try {

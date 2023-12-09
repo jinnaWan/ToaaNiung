@@ -22,40 +22,39 @@ export default function Register() {
     }
 
     try {
-      const resUserExists = await fetch("api/emailExists", {
-        method: "POST",
+      const resUserExists = await fetch("api/register", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
       });
 
-      const { user } = await resUserExists.json();
+      const { exists } = await resUserExists.json();
 
-      if (user) {
+      if (exists === 1) {
         toast.error("User already exists.");
-        return;
-      }
-
-      const res = await fetch("api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
-      });
-
-      if (res.ok) {
-        const form = e.target;
-        form.reset();
-        router.push("/login");
-        toast.success("Registration successful. You can now log in.");
       } else {
-        console.log("User registration failed.");
+        const res = await fetch("api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+          }),
+        });
+
+        if (res.ok) {
+          const form = e.target;
+          form.reset();
+          router.push("/login");
+          toast.success("Registration successful. You can now log in.");
+        } else {
+          console.log("User registration failed.");
+        }
       }
     } catch (error) {
       console.log("Error during registration: ", error);

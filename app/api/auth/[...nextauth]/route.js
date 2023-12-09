@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 export const authOptions = {
   providers: [
     CredentialsProvider({
+      // Configuring the CredentialsProvider for email/password login
       id: "credentials",
       name: "Credentials",
       credentials: {
@@ -14,6 +15,7 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        // Authorize function to validate user credentials
         const { email, password } = credentials;
         await mongooseConnect();
         try {
@@ -42,27 +44,28 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    // Callbacks for JWT and session management
     async jwt({ token, user, trigger, session }) {
-      // console.log("JWT: ", { token, user, trigger, session });
+      // JWT callback to handle JWT token updates
       if (trigger === "update") {
-        return { ...token, ...session.user };
+        return { ...token, ...session.user }; // Update the JWT token based on session data
       }
       if (user) {
         return {
           ...token,
-          isAdmin: user.isAdmin,
+          isAdmin: user.isAdmin, // Adding isAdmin flag to the token
         };
       }
       return token;
     },
     async session({ session, token }) {
-      // console.log("Session: ", { session, token });
+      // Session callback to handle session data
       session.user = token;
       return {
         ...session,
         user: {
           ...session.user,
-          isAdmin: token.isAdmin,
+          isAdmin: token.isAdmin, // Adding isAdmin flag to the session user
         },
       };
     },

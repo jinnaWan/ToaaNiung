@@ -20,3 +20,21 @@ export async function POST(req) {
     );
   }
 }
+
+export async function PUT(req) {
+  try {
+    await mongooseConnect();
+    const { email } = await req.json();
+    const user = await User.findOne({ email }).select("_id");
+    
+    // Check if user exists
+    if (user) {
+      return NextResponse.json({ exists: 1 }); // Return 1 if user exists
+    } else {
+      return NextResponse.json({ exists: 0 }); // Return 0 if user doesn't exist
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+

@@ -13,6 +13,7 @@ export default function MyProfile() {
   const router = useRouter();
   const [selectedMenu, setSelectedMenu] = React.useState("historybooking");
 
+  // Function to handle user sign out
   const handleSignOut = async () => {
     try {
       const result = await signOut({ redirect: false }); // Use { redirect: false } to prevent automatic redirection
@@ -29,6 +30,7 @@ export default function MyProfile() {
     }
   };
 
+  // Function to render the selected component based on the menu choice
   const renderSelectedComponent = () => {
     if (selectedMenu === "historybooking") {
       return <HistoryBooking />;
@@ -37,6 +39,7 @@ export default function MyProfile() {
     }
   };
 
+  // Function to handle menu item clicks and update the selected menu
   const handleMenuClick = (menu) => (e) => {
     e.preventDefault(); // Prevent the default behavior (page reload)
     setSelectedMenu(menu);
@@ -100,7 +103,7 @@ export default function MyProfile() {
 
             <a onClick={handleMenuClick("settingsprofile")} href="#">
               <div className="text-zinc-800 text-base font-medium leading-4 mt-5 py-2 px-1 rounded-lg hover:bg-gray-200">
-                Settings Profile
+                Setting Profile
               </div>
             </a>
 

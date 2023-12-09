@@ -40,6 +40,7 @@ export default function FindTable() {
 
   const router = useRouter();
 
+  // Function to handle the "Next" button click
   const handleNextClick = () => {
     // Check if the necessary data is available for confirmation
     if (!selectedObject || !numberPeople || !tableName || !maxPeople) {
@@ -58,6 +59,7 @@ export default function FindTable() {
     );
   };
 
+  // Function to handle changes in date and time input
   const handleDatetimeChange = async (event) => {
     const selectedDatetime = new Date(event.target.value);
 
@@ -123,6 +125,7 @@ export default function FindTable() {
     }
   };
 
+  // Function to handle changes in the number of people input
   const handleNumberPeopleChange = (event) => {
     const newNumberPeople = parseInt(event.target.value);
 
@@ -140,6 +143,7 @@ export default function FindTable() {
     }
   };
 
+  // Function to fetch data needed for the component
   const fetchData = async () => {
     try {
       const response = await axios.get("api/mapping");
