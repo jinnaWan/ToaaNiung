@@ -31,7 +31,7 @@ export async function POST(req) {
 
         if (user) {
           user.penalty += bookingCount; // Increment penalty by the number of bookings
-          if (user.penalty >= 3) {
+          if (user.penalty > 3) {
             user.status = "Banned";
           }
 

@@ -54,6 +54,7 @@ export const authOptions = {
         return {
           ...token,
           isAdmin: user.isAdmin, // Adding isAdmin flag to the token
+          status: user.status, // Adding status flag to the token
         };
       }
       return token;
@@ -66,6 +67,7 @@ export const authOptions = {
         user: {
           ...session.user,
           isAdmin: token.isAdmin, // Adding isAdmin flag to the session user
+          status: token.status, // Adding status flag to the session user
         },
       };
     },

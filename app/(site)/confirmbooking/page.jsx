@@ -203,6 +203,10 @@ export default function ConfirmBooking() {
     drawSelectedTable();
   }, [tableSize, canvasRef]);
 
+  const handleBackToFindTable = () => {
+    router.push('/findtable');
+  };
+
   return (
     <div className="bg-neutral-50 flex flex-wrap flex-col items-center justify-center">
       <Header />
@@ -275,13 +279,20 @@ export default function ConfirmBooking() {
                       </div>
                     </div>
                   </div>
-
+                  <div className="flex">
                   <button
                     onClick={handleConfirmBooking}
-                    className="text-white text-lg font-bold leading-6 whitespace-nowrap items-stretch bg-teal-500 self-center w-[241px] max-w-full mt-16 px-5 py-4 rounded-[64px] max-md:mt-10 mb-28"
+                    className="text-white text-lg font-bold leading-6 whitespace-nowrap items-stretch bg-teal-500 self-center w-[241px] max-w-full mt-16 px-5 py-4 rounded-[64px] max-md:mt-10 mb-28  hover:bg-teal-600"
                   >
                     Confirm booking
                   </button>
+                  <button
+                    onClick={handleBackToFindTable}
+                    className="text-white text-lg font-bold leading-6 whitespace-nowrap items-stretch bg-gray-400 self-center w-[150px] ml-5 max-w-full mt-16 px-5 py-4 rounded-[64px] max-md:mt-10 mb-28  hover:bg-gray-500"
+                  >
+                    Back
+                  </button>
+                  </div>
                 </div>
               </div>
             </div>

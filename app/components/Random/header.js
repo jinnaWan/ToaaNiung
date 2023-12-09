@@ -38,7 +38,7 @@ export default function Header() {
               srcSet="https://cdn.discordapp.com/attachments/1170752491944677567/1175513295504027739/Logoggez.png?ex=656b8111&is=65590c11&hm=164e1aaaa76c6e1fcc3d450539feb7947c475ca5706f9c577b9351027d79affb&"
               className="object-contain object-center w-14 max-w-full"
             />
-            <div className="shadow-2xl pl-4 font-extrabold  tracking-[3.48px] self-stretch whitespace-nowrap mt-0.5 text-white text-center text-3xl leading-10 font-Belleza">
+            <div className="pl-4 font-extrabold  tracking-[3.48px] self-stretch whitespace-nowrap mt-0.5 text-white text-center text-3xl leading-10 font-Belleza">
               TOAA-NIUNG
             </div>
           </a>

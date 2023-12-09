@@ -1,6 +1,7 @@
 import { mongooseConnect } from "@/lib/mongoose";
 import { NextResponse } from "next/server";
 import { Booking } from "@/models/Booking";
+import { User } from "@/models/User";
 
 export async function GET(req) {
   try {
@@ -61,6 +62,15 @@ export async function POST(req) {
 
     const { arrivalTime, userEmail, tableName, tableSize, numberOfPeople } =
       await req.json();
+
+    // Fetch user data based on userEmail
+    const user = await User.findOne({ email: userEmail });
+    if (!user || user.status === "Banned") {
+      return NextResponse.json(
+        { error: "User not found or banned" },
+        { status: 400 }
+      );
+    }
 
     // Convert the received arrivalTime to a Date object and ensure it's in UTC
     const parsedArrivalTime = new Date(arrivalTime + "Z"); // Adding 'Z' sets the time to UTC

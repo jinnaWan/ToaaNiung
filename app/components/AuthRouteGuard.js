@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import axios from 'axios';
 
 const AuthRouteGuard = ({ children }) => {
@@ -65,15 +65,23 @@ const AuthRouteGuard = ({ children }) => {
       const protectedRoutesAdmin = ['/admin'];
 
       if (session) {
-        if (protectedRoutesLoggedIn.includes(window.location.pathname)) {
-          window.location.href = '/findtable'; // Redirect logged-in users from login/register pages
-        }
-        if (protectedRoutesAdmin.includes(window.location.pathname) && !session.user.isAdmin) {
-          window.location.href = '/findtable';
+        if (session.user.status === 'Banned') {
+          // If user status is 'Banned', perform automatic logout
+          signOut(); // Logout the user
+          window.location.href = '/login'; // Redirect to login page
+        } else {
+          // Other route protection logic for different user statuses
+          if (protectedRoutesLoggedIn.includes(window.location.pathname)) {
+            window.location.href = '/findtable';
+          }
+          if (protectedRoutesAdmin.includes(window.location.pathname) && !session.user.isAdmin) {
+            window.location.href = '/findtable';
+          }
         }
       } else {
+        // Redirect logged-out users from protected routes
         if (protectedRoutesLoggedOut.includes(window.location.pathname)) {
-          window.location.href = '/login'; // Redirect logged-out users from protected routes
+          window.location.href = '/login';
         }
       }
     }, 800); // Adjust the delay time as needed (500 milliseconds)

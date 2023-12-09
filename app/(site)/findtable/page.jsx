@@ -183,6 +183,7 @@ export default function FindTable() {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
+
     // Handle canvas click event
     const handleClick = (event) => {
       const x = event.offsetX;
@@ -488,10 +489,10 @@ export default function FindTable() {
               />
             </div>
           </div>
-          <div className="mt-5 flex items-center justify-center gap-x-6 mb-14">
+          <div className="flex items-center justify-center gap-x-6 mb-14">
             <a
               onClick={handleNextClick}
-              className="rounded-md bg-teal-500 px-4 py-2 text-lg leading-6 text-white shadow hover:bg-teal-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              className="text-white text-lg font-bold leading-6 whitespace-nowrap items-stretch bg-teal-500 self-center w-[200px] max-w-full mt-5 px-5 py-4 rounded-[64px] max-md:mt-10 mb-28 hover:bg-teal-600"
             >
               Next
             </a>
