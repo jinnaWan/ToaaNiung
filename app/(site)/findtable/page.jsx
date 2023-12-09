@@ -474,6 +474,17 @@ export default function FindTable() {
               </div>
             </div>
           </div>
+          <div className="self-center flex items-stretch justify-between gap-5 my-auto">
+            <div className="bg-black bg-opacity-20 w-px shrink-0 h-15" />
+            <div className="mx-7  self-center flex gap-3.5  rounded-[100px]">
+              <a
+                onClick={handleNextClick}
+                className="text-white text-l font-bold leading-4 whitespace-nowrap items-stretch bg-teal-500 text-center self-center w-[150px] max-w-full px-5 py-4 rounded-[64px] hover:bg-teal-600"
+              >
+                Book
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -490,12 +501,6 @@ export default function FindTable() {
             </div>
           </div>
           <div className="flex items-center justify-center gap-x-6 mb-14">
-            <a
-              onClick={handleNextClick}
-              className="text-white text-lg font-bold leading-6 whitespace-nowrap items-stretch bg-teal-500 self-center w-[200px] max-w-full mt-5 px-5 py-4 rounded-[64px] max-md:mt-10 mb-28 hover:bg-teal-600"
-            >
-              Next
-            </a>
           </div>
         </div>
       </main>
