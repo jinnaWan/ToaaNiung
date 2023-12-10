@@ -96,7 +96,7 @@ export default function MyProfile() {
             </div>
 
             <a onClick={handleMenuClick("historybooking")} href="#">
-              <div className="text-zinc-800 text-base font-medium leading-4 mt-14 py-2 px-1 rounded-lg hover:bg-gray-200">
+              <div className="text-zinc-800 text-base text-center font-medium leading-4 mt-14 py-2 px-1 rounded-lg hover:bg-gray-200">
                 Reservation History
               </div>
             </a>
