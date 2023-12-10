@@ -1,12 +1,22 @@
-import Image from "next/image";
+"use client";
 import * as React from "react";
-import Login from "../(site)/login/page";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Fragment } from "react";
+import { Menu, Transition } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 const generateRadialGradient = (color1, color2, color3) => {
   return `radial-gradient(138.06% 1036.51% at 95.25% -2.54%, ${color1} 0%, ${color2} 50%, ${color3} 100%)`;
 };
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
 export default function MyComponent(props) {
+  const { data: session } = useSession();
+  const router = useRouter();
   const tealColor = "#009688";
   const greenColor = "#4CAF50";
   const blueColor = "#2196F3";
@@ -15,6 +25,23 @@ export default function MyComponent(props) {
     greenColor,
     blueColor
   );
+
+  const handleSignOut = async () => {
+    try {
+      const result = await signOut({ redirect: false }); // Use { redirect: false } to prevent automatic redirection
+      if (!result.error) {
+        // Manual redirection to the login page
+        router.push("/login");
+      } else {
+        // Handle sign-out failure, e.g., show an error message
+        toast.error("Sign-out failed.");
+      }
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast.error("An error occurred during sign-out.");
+    }
+  };
+
   return (
     <div className="shadow-sm bg-white flex flex-col border-0 border-solid border-black">
       <div className="flex-col justify-start items-center overflow-hidden self-stretch relative z-[1] flex min-h-[840px] w-full pb-20 max-md:max-w-full">
@@ -44,7 +71,15 @@ export default function MyComponent(props) {
               >
                 Home
               </a>
-
+              {session ? (
+                <a
+                  href="/findtable"
+                  className="text-white text-base font-medium leading-5 whitespace-nowrap my-auto "
+                >
+                  Reservation
+                </a>
+              ) : /* Render alternative component or hide the link */
+              null}
               <a
                 href=""
                 className="text-white text-base font-medium leading-5 self-center my-auto"
@@ -58,20 +93,99 @@ export default function MyComponent(props) {
                 Contact
               </a>
             </div>
-
-            <a
-              href="/login"
-              className="items-center flex justify-between gap-2"
-            >
-              <div className="text-white text-base leading-5 my-auto">
-                Login
+            {session ? (
+              <div className="justify-between items-stretch self-center flex gap-5 my-auto">
+                {/* User dropdown */}
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <Menu.Button className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                      <div className="text-gray-700 font-normal">
+                        {session?.user.name}
+                      </div>
+                      <ChevronDownIcon
+                        className="-mr-1 h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </Menu.Button>
+                  </div>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="py-1">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              onClick={() => router.push("/myprofile")} // Redirect to My Profile page
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "block px-4 py-2 text-sm cursor-pointer"
+                              )}
+                            >
+                              My Profile
+                            </a>
+                          )}
+                        </Menu.Item>
+                        {session?.user.isAdmin && ( // Check if the user is an admin
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                onClick={() => router.push("/admin")} // Redirect to Admin page
+                                className={classNames(
+                                  active
+                                    ? "bg-gray-100 text-gray-900"
+                                    : "text-gray-700",
+                                  "block px-4 py-2 text-sm cursor-pointer"
+                                )}
+                              >
+                                Admin
+                              </a>
+                            )}
+                          </Menu.Item>
+                        )}
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              onClick={handleSignOut} // Call handleSignOut for logout action
+                              className={classNames(
+                                active
+                                  ? "bg-gray-100 text-gray-900"
+                                  : "text-gray-700",
+                                "block px-4 py-2 text-sm cursor-pointer"
+                              )}
+                            >
+                              Logout
+                            </a>
+                          )}
+                        </Menu.Item>
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
               </div>
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/bf7e83d4-a318-4454-a45a-afaa34ab4504?"
-                className="aspect-square object-contain object-center w-6 overflow-hidden self-stretch shrink-0 max-w-full"
-              />
-            </a>
+            ) : (
+              <a
+                href="/login"
+                className="items-center flex justify-between gap-2"
+              >
+                <div className="text-white text-base leading-5 my-auto">
+                  Login
+                </div>
+                <img
+                  loading="lazy"
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/bf7e83d4-a318-4454-a45a-afaa34ab4504?"
+                  className="aspect-square object-contain object-center w-6 overflow-hidden self-stretch shrink-0 max-w-full"
+                />
+              </a>
+            )}
           </div>
         </div>
       </div>
@@ -217,7 +331,7 @@ export default function MyComponent(props) {
                 <div className="items-stretch self-stretch flex grow basis-[0%] flex-col font-DMSans">
                   <div className="text-neutral-800  text-base leading-5 whitespace-nowrap">
                     Email:{" "}
-                    <a href="mailto:dechawat357@gmail.com" target="_blank" >
+                    <a href="mailto:dechawat357@gmail.com" target="_blank">
                       dechawat357@gmail.com
                     </a>
                   </div>

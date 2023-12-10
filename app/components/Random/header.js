@@ -52,7 +52,7 @@ export default function Header() {
           </a>
           <a
             href="#"
-            className="text-white text-base font-medium leading-5 self-center my-auto border-b-white border-b border-solid"
+            className="text-white text-base font-medium leading-5 self-center my-auto border-b-white border-b-4 border-solid"
           >
             Reservation
           </a>
@@ -109,6 +109,23 @@ export default function Header() {
                       </a>
                     )}
                   </Menu.Item>
+                  {session?.user.isAdmin && ( // Check if the user is an admin
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          onClick={() => router.push("/admin")} // Redirect to Admin page
+                          className={classNames(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "block px-4 py-2 text-sm cursor-pointer"
+                          )}
+                        >
+                          Admin
+                        </a>
+                      )}
+                    </Menu.Item>
+                  )}
                   <Menu.Item>
                     {({ active }) => (
                       <a
