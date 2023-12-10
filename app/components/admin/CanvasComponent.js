@@ -99,13 +99,17 @@ export default function CanvasComponent() {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    const shapesList = document.querySelector(".shapes-list");
-
     const handleClickOutsideElements = (event) => {
-      if (
-        !canvas.contains(event.target) &&
-        !shapesList.contains(event.target)
-      ) {
+      const isInputFieldClicked = event.target.matches(
+        "input[type='text'], input[type='number']"
+      );
+      const canvas = canvasRef.current;
+      const shapesList = document.querySelector(".shapes-list");
+    
+      const isCanvasClicked = canvas.contains(event.target);
+      const isShapesListClicked = shapesList?.contains(event.target);
+    
+      if (!isInputFieldClicked && !isCanvasClicked && !isShapesListClicked) {
         // Click was outside both canvas and shapes list, deselect object and shape
         setSelectedObject(null);
         setSelectedShape(null);
@@ -113,6 +117,7 @@ export default function CanvasComponent() {
         setMaxPeople(0);
       }
     };
+    
 
     window.addEventListener("click", handleClickOutsideElements);
 
@@ -617,7 +622,7 @@ export default function CanvasComponent() {
             />
           </div> */}
             {selectedObject && (
-              <div className="object-details shapes-list flex flex-wrap justify-center items-center self-center mt-10">
+              <div className="object-details flex flex-wrap justify-center items-center self-center mt-10">
                 <p className=" justify-center text-slate-900 text-center text-normal font-bold leading-5 ">
                   Table Name:
                 </p>
@@ -652,7 +657,7 @@ export default function CanvasComponent() {
               </div>
             )}
 
-            <div className="flex justify-center shapes-list mt-10 mb-10">
+            <div className="flex justify-center mt-10 mb-10">
               <div className="flex  items-stretch justify-between gap-5 max-md:flex-wrap mx-auto">
                 <button
                   onClick={handleClearAll}
