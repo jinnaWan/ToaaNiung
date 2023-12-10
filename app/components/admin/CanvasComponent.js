@@ -29,6 +29,18 @@ export default function CanvasComponent() {
   const [maxPeople, setMaxPeople] = useState(0);
   const [canvasWidth, setCanvasWidth] = useState(800); // Set your default width
   const [canvasHeight, setCanvasHeight] = useState(600); // Set your default height
+  const [lockXAxis, setLockXAxis] = useState(false);
+  const [lockYAxis, setLockYAxis] = useState(false);
+
+  const handleLockXAxis = () => {
+    setLockXAxis(!lockXAxis);
+    setLockYAxis(false); // Reset Y-axis locking when X-axis is locked or unlocked
+  };
+
+  const handleLockYAxis = () => {
+    setLockYAxis(!lockYAxis);
+    setLockXAxis(false); // Reset X-axis locking when Y-axis is locked or unlocked
+  };
 
   const showToast = (message, type = "success") => {
     // Display a toast notification based on the type
@@ -87,6 +99,23 @@ export default function CanvasComponent() {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
+    const shapesList = document.querySelector(".shapes-list");
+
+    const handleClickOutsideElements = (event) => {
+      if (
+        !canvas.contains(event.target) &&
+        !shapesList.contains(event.target)
+      ) {
+        // Click was outside both canvas and shapes list, deselect object and shape
+        setSelectedObject(null);
+        setSelectedShape(null);
+        setTableName("");
+        setMaxPeople(0);
+      }
+    };
+
+    window.addEventListener("click", handleClickOutsideElements);
+
     // Additional state to track drag information
     const dragState = {
       isDragging: false,
@@ -138,6 +167,14 @@ export default function CanvasComponent() {
         dragState.isDragging = true;
         dragState.startX = x;
         dragState.startY = y;
+
+        if (lockXAxis) {
+          // Lock X-axis movement
+          dragState.startY = clickedObject.y;
+        } else if (lockYAxis) {
+          // Lock Y-axis movement
+          dragState.startX = clickedObject.x;
+        }
       }
     };
 
@@ -147,8 +184,17 @@ export default function CanvasComponent() {
         const y = event.offsetY;
 
         // Calculate the change in position
-        const deltaX = x - dragState.startX;
-        const deltaY = y - dragState.startY;
+        let deltaX = x - dragState.startX;
+        let deltaY = y - dragState.startY;
+
+        // Check for locked axis and adjust the movement accordingly
+        if (lockXAxis) {
+          // Lock X-axis movement
+          deltaY = 0;
+        } else if (lockYAxis) {
+          // Lock Y-axis movement
+          deltaX = 0;
+        }
 
         // Update the object's position
         if (selectedObject) {
@@ -417,6 +463,9 @@ export default function CanvasComponent() {
       // Remove the click event listener when the component unmounts
       canvas.removeEventListener("click", handleClick);
 
+      // Remove the event listener when the component unmounts
+      window.removeEventListener("click", handleClickOutsideElements);
+
       canvas.removeEventListener("mousedown", handleMouseDown);
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseup", handleMouseUp);
@@ -489,29 +538,49 @@ export default function CanvasComponent() {
     <div className="flex  flex-col mt-20 self-start  w-5/6 ">
       <div className="overflow-x-auto items-stretch flex flex-col mx-auto">
         <div className="flex flex-wrap w-full justify-center">
-          <div className="shapes-list p-4  h-fit bg-white rounded-xl mr-10">
-            <ul>
-              {TABLE_SIZES.map((shape) => (
-                <li
-                  key={shape}
-                  style={{
-                    filter:
-                      selectedShape === shape
-                        ? "invert(200%) sepia(100%) saturate(2394%) hue-rotate(183deg) brightness(104%) contrast(101%)"
-                        : "",
-                  }}
-                  className={` p-2 cursor-pointer  rounded-md `}
-                  onClick={() => setSelectedShape(shape)}
-                >
-                  <Image
-                    src={TABLE_IMAGES[shape]}
-                    alt={shape}
-                    width={40}
-                    height={40}
-                  />
-                </li>
-              ))}
-            </ul>
+          <div className="">
+            <div className="flex shapes-list flex-col items-center p-4 h-fit bg-white rounded-xl mr-10 mt-5">
+              <ul>
+                {TABLE_SIZES.map((shape) => (
+                  <li
+                    key={shape}
+                    style={{
+                      filter:
+                        selectedShape === shape
+                          ? "invert(200%) sepia(100%) saturate(2394%) hue-rotate(183deg) brightness(104%) contrast(101%)"
+                          : "",
+                    }}
+                    className={` p-2 cursor-pointer  rounded-md `}
+                    onClick={() => setSelectedShape(shape)}
+                  >
+                    <Image
+                      src={TABLE_IMAGES[shape]}
+                      alt={shape}
+                      width={40}
+                      height={40}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="flex shapes-list flex-col items-center p-4 h-fit bg-white rounded-xl mr-10 mt-5 font-DMSans text-zinc-400">
+              <button
+                className={`p-2 cursor-pointer rounded-md ${
+                  lockXAxis ? "bg-gray-300" : ""
+                }`}
+                onClick={handleLockXAxis}
+              >
+                Lock X
+              </button>
+              <button
+                className={`p-2 cursor-pointer rounded-md ${
+                  lockYAxis ? "bg-gray-300" : ""
+                }`}
+                onClick={handleLockYAxis}
+              >
+                Lock Y
+              </button>
+            </div>
           </div>
           <div className="canvas-container">
             <canvas

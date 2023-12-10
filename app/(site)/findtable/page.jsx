@@ -47,16 +47,23 @@ export default function FindTable() {
       toast.error("Please fill in all required information before proceeding.");
       return;
     }
-    router.push(
-      `/confirmbooking?data=${encodeURIComponent(
-        JSON.stringify({
-          tableName: tableName,
-          arrivalTime: datetime,
-          numberOfPeople: numberPeople,
-          tableSize: selectedObject.shape,
-        })
-      )}`
-    );
+    
+    // Check if the selected table is already booked
+    if (selectedObject.isBooked) {
+      toast.error("The selected table is already booked. Please choose another table.");
+      return;
+    } else {
+      router.push(
+        `/confirmbooking?data=${encodeURIComponent(
+          JSON.stringify({
+            tableName: tableName,
+            arrivalTime: datetime,
+            numberOfPeople: numberPeople,
+            tableSize: selectedObject.shape,
+          })
+        )}`
+      );
+    }
   };
 
   // Function to handle changes in date and time input
@@ -83,8 +90,8 @@ export default function FindTable() {
         `/api/booking?datetime=${thailandTime.toISOString()}`
       );
 
-      console.log("Full Response:", response);
-      console.log("Response data:", response.data);
+      // console.log("Full Response:", response);
+      // console.log("Response data:", response.data);
 
       if (!response.data) {
         toast.error("Empty response received from the server.");
@@ -99,12 +106,6 @@ export default function FindTable() {
           isBooked: bookedTableNames.includes(obj.tableName),
         }))
       );
-
-      if (bookedTableNames.length === 0) {
-        // toast.success("Tables are available for booking!");
-      } else {
-        // toast.error("Selected date and time are fully booked.");
-      }
 
       // Check if the selected table is booked after updating the date and time
       const isTableBooked = selectedObject && selectedObject.isBooked;
@@ -166,11 +167,18 @@ export default function FindTable() {
   };
 
   useEffect(() => {
-    fetchData(); // Fetch data only when the component is mounted
-
-    // Initialize with current datetime and check booking status
-    handleDatetimeChange({ target: { value: getCurrentDateTime() } });
+    const fetchDataAndHandleDatetimeChange = async () => {
+      try {
+        await fetchData(); // Fetch data
+        handleDatetimeChange({ target: { value: getCurrentDateTime() } }); // Check booking status
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+  
+    fetchDataAndHandleDatetimeChange();
   }, []); // Empty dependency array for one-time execution
+  
 
   const isObjectListEmpty = () => {
     return objects.length === 0;
@@ -500,8 +508,7 @@ export default function FindTable() {
               />
             </div>
           </div>
-          <div className="flex items-center justify-center gap-x-6 mb-14">
-          </div>
+          <div className="flex items-center justify-center gap-x-6 mb-14"></div>
         </div>
       </main>
     </div>

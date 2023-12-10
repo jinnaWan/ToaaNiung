@@ -20,7 +20,14 @@ export default function ConfirmBooking() {
   const { tableName, arrivalTime, numberOfPeople, tableSize } = parsedData;
 
   // Format the arrivalTime using the Date object
-  const formattedArrivalTime = new Date(arrivalTime).toLocaleString();
+  const formattedArrivalTime = new Date(arrivalTime).toLocaleString('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  });  
 
   const handleConfirmBooking = async () => {
     try {
