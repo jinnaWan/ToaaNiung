@@ -97,7 +97,7 @@ export default function Admin() {
 
             <a onClick={handleMenuClick("allbooking")} href="#">
               <div className="text-zinc-800 text-base font-medium leading-4 mt-14 py-2 px-1 rounded-lg hover:bg-gray-200">
-                All Booking
+                All Reservations
               </div>
             </a>
 

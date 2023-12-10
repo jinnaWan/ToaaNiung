@@ -239,7 +239,7 @@ export default function MyComponent(props) {
                       href="/login"
                       className="mt-6 text-center rounded-[64px] w-fit h-10 bg-teal-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
-                      Book now
+                      Reserve now
                     </a>
                   </div>
                 </div>
@@ -278,7 +278,7 @@ export default function MyComponent(props) {
                       href="/login"
                       className="mt-6 text-center rounded-[64px] w-fit h-10 bg-teal-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
-                      Book now
+                      Reserve now
                     </a>
                   </div>
                 </div>
@@ -305,7 +305,7 @@ export default function MyComponent(props) {
             href="/login"
             className=" text-xl self-center mt-6 text-center rounded-[64px] w-fit h-fit text-teal-600  px-4 py-3 font-semibold bg-white shadow-sm hover:bg-teal-600 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Book Now
+            Reserve Now
           </a>
         </div>
       </div>

@@ -489,7 +489,7 @@ export default function FindTable() {
                 onClick={handleNextClick}
                 className="text-white text-l font-bold leading-4 whitespace-nowrap items-stretch bg-teal-500 text-center self-center w-[150px] max-w-full px-5 py-4 rounded-[64px] hover:bg-teal-600"
               >
-                Book
+                Reserve
               </a>
             </div>
           </div>

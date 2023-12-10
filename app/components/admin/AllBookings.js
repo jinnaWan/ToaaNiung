@@ -235,7 +235,7 @@ export default function AllBookings() {
         <div className="justify-between items-stretch flex w-full gap-5 max-md:max-w-full max-md:flex-wrap font-DMSans">
           <div className="items-stretch flex grow basis-[0%] flex-col px-5">
             <div className="text-zinc-800 text-4xl font-semibold whitespace-nowrap mr-5">
-              Booking history
+              Reservation history
             </div>
           </div>
 
@@ -255,7 +255,7 @@ export default function AllBookings() {
                 className="text-white text-xs font-bold rounded shadow-md bg-red-500 hover:bg-red-400 my-auto px-3 py-2"
                 onClick={handleCancelReservation}
               >
-                Delete reservation
+                Delete Reservation
               </button>
             ))}
         </div>

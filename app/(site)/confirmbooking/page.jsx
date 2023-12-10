@@ -244,7 +244,7 @@ export default function ConfirmBooking() {
                     </div>
                     <div className="items-stretch flex flex-col mt-6 px-5 max-md:max-w-full">
                       <div className="text-neutral-600 text-base leading-5 -mr-5 max-md:max-w-full">
-                        Booking details
+                        Reservation details
                       </div>
                       <div className="items-stretch flex w-48 max-w-full gap-2 mt-4 self-start">
                         <div className="text-cyan-700 text-base font-bold leading-5">
@@ -291,7 +291,7 @@ export default function ConfirmBooking() {
                     onClick={handleConfirmBooking}
                     className="text-white text-lg font-bold leading-6 whitespace-nowrap items-stretch bg-teal-500 self-center w-[241px] max-w-full mt-16 px-5 py-4 rounded-[64px] max-md:mt-10 mb-28  hover:bg-teal-600"
                   >
-                    Confirm booking
+                    Confirm Reservation
                   </button>
                   <button
                     onClick={handleBackToFindTable}
