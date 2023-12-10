@@ -33,7 +33,7 @@ export default function Register() {
       const { exists } = await resUserExists.json();
 
       if (exists === 1) {
-        toast.error("User already exists.");
+        toast.error("Email already exists.");
       } else {
         const res = await fetch("api/register", {
           method: "POST",

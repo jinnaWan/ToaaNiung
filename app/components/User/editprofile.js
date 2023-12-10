@@ -37,10 +37,10 @@ export default function EditProfile() {
           email: data.email, // Update with the new email
         },
       });
-    //   toast.success("Session updated successfully!");
+      //   toast.success("Session updated successfully!");
     } catch (error) {
       console.error("Error updating session:", error);
-    //   toast.error("An error occurred while updating the session.");
+      //   toast.error("An error occurred while updating the session.");
     }
   };
 
@@ -61,16 +61,30 @@ export default function EditProfile() {
     }
 
     try {
-      const response = await axios.put(
-        `/api/user?data=${JSON.stringify(data)}`
-      );
-      console.log(response);
+      const resUserExists = await fetch("api/register", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: data.email }),
+      });
 
-      if (response.status === 200) {
-        updateSession(); // Update the session on the client side
-        toast.success("Profile updated successfully!");
+      const { exists } = await resUserExists.json();
+
+      if (exists === 1 && data.email !== session.user.email) {
+        toast.error("Email already exists.");
       } else {
-        toast.error("Error updating profile.");
+        const response = await axios.put(
+          `/api/user?data=${JSON.stringify(data)}`
+        );
+        console.log(response);
+
+        if (response.status === 200) {
+          updateSession(); // Update the session on the client side
+          toast.success("Profile updated successfully!");
+        } else {
+          toast.error("Error updating profile.");
+        }
       }
     } catch (error) {
       console.error("Error updating profile:", error);
