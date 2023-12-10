@@ -13,6 +13,7 @@
     "@heroicons/react": "^2.0.18",
     "axios": "^1.5.1",
     "bcryptjs": "^2.4.3",
+    "million": "^2.6.4",
     "moment": "^2.29.4",
     "mongoose": "^7.6.2",
     "next": "13.5.4",
