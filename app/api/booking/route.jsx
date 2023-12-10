@@ -21,20 +21,24 @@ export async function GET(req) {
     // Find bookings where the ranges intersect
     const bookedTables = await Booking.find({
       $or: [
+        // Case 1: Booking starts before the given end time and ends after the given datetime
+        {
+          arrivalTime: { $lt: endTime },
+          departureTime: { $gt: datetime },
+        },
+        // Case 2: Booking starts before or at the given datetime and ends after the given datetime
         {
           arrivalTime: { $lte: datetime },
-          departureTime: { $gte: datetime },
+          departureTime: { $gt: datetime },
         },
+        // Case 3: Booking starts before the given end time and ends at or after the given end time
         {
-          arrivalTime: { $lte: endTime },
+          arrivalTime: { $lt: endTime },
           departureTime: { $gte: endTime },
-        },
-        {
-          arrivalTime: { $gte: datetime },
-          departureTime: { $lte: endTime },
         },
       ],
     });
+    
 
     console.log("Found:", bookedTables);
 
