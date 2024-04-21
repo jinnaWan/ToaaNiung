@@ -45,11 +45,11 @@ export default function MyComponent(props) {
   return (
     <div className="shadow-sm bg-white flex flex-col border-0 border-solid border-black">
       <div className="flex-col justify-start items-center overflow-hidden self-stretch relative z-[1] flex min-h-[840px] w-full pb-20 max-md:max-w-full">
-        <img
-          loading="lazy"
-          src="https://media.discordapp.net/attachments/1170752491944677567/1170753746888818708/Hero_section.png?ex=655a3064&is=6547bb64&hm=08797518129097098fa65d511bb6ff6d6b56601db5bff4ae1177ff7b6086f314&=&width=1388&height=607"
-          className="absolute z-[-1] h-full w-full object-cover object-center inset-0"
-        />
+      <img
+        loading="lazy"
+        src="/image/Landing1.png"
+        className="absolute z-[-1] h-full w-full object-cover object-center inset-0"
+      />
         <div className="justify-center items-center self-stretch flex w-full flex-col flex-wrap px-5 py-10 ">
           <div className="items-stretch flex w-[1224px]  justify-between gap-5 py-0.5 flex-wrap">
             <div className="flex items-center gap-3.5">
@@ -204,8 +204,9 @@ export default function MyComponent(props) {
               <div className="gap-5 flex max-md:flex-col max-md:items-stretch max-md:gap-0">
                 <div className="flex flex-col items-stretch w-[61%] max-md:w-full max-md:ml-0">
                   <img
+                    style={{ objectFit: 'cover', borderRadius: '20px' }}
                     loading="lazy"
-                    srcSet="https://media.discordapp.net/attachments/1170752491944677567/1170752690679193610/image.png?ex=655a2f68&is=6547ba68&hm=7876629bc7cf2552cc5fb991bf6ef45da39de342c44873ee3fd2a2dbc8ebd59c&=&width=930&height=426"
+                    srcSet="/image/Landing2.jpg"
                     className="aspect-[2.18] object-contain object-center w-full self-stretch overflow-hidden max-md:max-w-full"
                   />
                 </div>
@@ -284,8 +285,9 @@ export default function MyComponent(props) {
                 </div>
                 <div className="flex flex-col items-stretch w-[61%] ml-5 max-md:w-full max-md:ml-0">
                   <img
+                    style={{ objectFit: 'cover', borderRadius: '20px' }}
                     loading="lazy"
-                    srcSet="https://media.discordapp.net/attachments/1170752491944677567/1170754518573662288/image.png?ex=65636b9c&is=6550f69c&hm=ecc0230621598196f421f8fef395637139420d200d35972424004a21f9d6015f&=&width=930&height=451"
+                    srcSet="/image/Landing3.jpg"
                     className="aspect-[1.95] object-contain object-center w-full self-stretch overflow-hidden max-md:max-w-full"
                   />
                 </div>
@@ -296,8 +298,9 @@ export default function MyComponent(props) {
       </div>
       <div className="flex-col items-center overflow-hidden self-stretch relative z-[1] flex min-h-[334px] w-full mt-7 pt-20 pb-32 px-20 max-md:max-w-full max-md:pb-24 max-md:px-5">
         <img
+          style={{ objectFit: 'cover'}}
           loading="lazy"
-          srcSet="https://media.discordapp.net/attachments/1170752491944677567/1170754984447594676/CTA_1.png?ex=655a318b&is=6547bc8b&hm=359384595b4c198d57738022705f7c71cfa0874541be2444ed74aeec989b5982&=&width=1440&height=217"
+          srcSet="/image/Landing4.jpeg"
           className="absolute z-[-1] h-full w-full object-cover object-center inset-0 "
         />
         <div className="relative self-center flex mb-0 w-36 max-w-full flex-col max-md:mb-2.5 font-DMSans">

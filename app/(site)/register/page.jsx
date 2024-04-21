@@ -145,8 +145,9 @@ export default function Register() {
 
       <div className=" sm:w-full xl:w-1/2  bg-gray-500 h-full">
         <img
+          style={{ objectFit: 'cover'}}
           loading="lazy"
-          srcSet="https://cdn.discordapp.com/attachments/1170752491944677567/1171114993975033927/Right_image.png?ex=655b80d4&is=65490bd4&hm=96cc3239f5ab950461eef42a13e684d0d0bca846806f10aa6179ec4e2564f88b&"
+          srcSet="/image/Landing4.jpeg"
           className="aspect-[0.95] object-contain object-center  overflow-hidden w-full self-end h-full"
         />
       </div>
