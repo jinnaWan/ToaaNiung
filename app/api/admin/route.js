@@ -1,13 +1,14 @@
 import { mongooseConnect } from "@/lib/mongoose";
-import { Booking } from "@/models/Booking";
 import { NextResponse } from "next/server";
+import Booking from "@/models/Booking";
 
 export async function GET(req) {
     try {
       await mongooseConnect();
   
       // Fetch bookings based on user's email
-      const bookings = await Booking.find();
+      const BookingModel = new Booking();
+      const bookings = await BookingModel.getAllBookings();
   
       // Filter the data to include only specific fields
       const filteredBookings = bookings.map((booking) => {
@@ -48,7 +49,8 @@ export async function GET(req) {
       // Delete bookings from the database
       const deletionResults = await Promise.all(
         selectedBookings.map(async (bookingId) => {
-          return await Booking.deleteOne({ _id: bookingId });
+          const BookingModel = new Booking();
+          return await BookingModel.deleteBookingById(bookingId);
           // Use Booking.deleteMany if you need to delete multiple bookings based on a condition
         })
       );
@@ -70,7 +72,8 @@ export async function GET(req) {
       const { bookingId, newStatus } = data;
   
       // Find the booking by ID and update its status
-      const updatedBooking = await Booking.findByIdAndUpdate(
+      const BookingModel = new Booking();
+      const updatedBooking = await BookingModel.getBookingById(
         bookingId,
         { status: newStatus },
         { new: true }
