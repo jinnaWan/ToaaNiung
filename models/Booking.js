@@ -57,9 +57,9 @@ class Booking {
   }
 
   // Method to get all bookings
-  async getAllBookings() {
+  async getAllBookings(data) {
     try {
-      const bookings = await this.Booking.find();
+      const bookings = await this.Booking.find(data);
       return bookings;
     } catch (error) {
       throw error;

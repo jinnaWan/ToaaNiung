@@ -29,7 +29,7 @@ export async function POST(req) {
     await Promise.all(
       Object.entries(bookingsByUser).map(async ([userEmail, bookingCount]) => {
         const UserModel = new User();
-        const user = await UserModel.getUserByEmail({ email: userEmail });
+        const user = await UserModel.getUserByEmail(userEmail);
 
         if (user) {
           user.penalty += bookingCount; // Increment penalty by the number of bookings

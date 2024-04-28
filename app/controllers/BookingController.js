@@ -14,23 +14,47 @@ export async function getAvailableTables(req) {
 
     const endTime = new Date(new Date(datetime).getTime() + 2 * 60 * 60 * 1000);
 
+    // const bookingModel = new Booking();
+    // const bookedTables = await bookingModel.getAllBookings({
+    //   $or: [
+    //     {
+    //       arrivalTime: { $lt: endTime },
+    //       departureTime: { $gt: datetime },
+    //     },
+    //     {
+    //       arrivalTime: { $lte: datetime },
+    //       departureTime: { $gt: datetime },
+    //     },
+    //     {
+    //       arrivalTime: { $lt: endTime },
+    //       departureTime: { $gte: endTime },
+    //     },
+    //   ],
+    // });
+
+    // Find bookings where the ranges intersect and the status is not "Cancelled"
     const bookingModel = new Booking();
     const bookedTables = await bookingModel.getAllBookings({
-      $or: [
-        {
-          arrivalTime: { $lt: endTime },
-          departureTime: { $gt: datetime },
-        },
-        {
-          arrivalTime: { $lte: datetime },
-          departureTime: { $gt: datetime },
-        },
-        {
-          arrivalTime: { $lt: endTime },
-          departureTime: { $gte: endTime },
-        },
-      ],
-    });
+        status: { $nin: ["Cancelled", "Completed"] }, // Ignore "Cancelled" and "Completed" bookings
+        $or: [
+          // Case 1: Booking starts before the given end time and ends after the given datetime
+          {
+            arrivalTime: { $lt: endTime },
+            departureTime: { $gt: new Date(datetime) },
+          },
+          // Case 2: Booking starts before or at the given datetime and ends after the given datetime
+          {
+            arrivalTime: { $lte: new Date(datetime) },
+            departureTime: { $gt: new Date(datetime) },
+          },
+          // Case 3: Booking starts before the given end time and ends at or after the given end time
+          {
+            arrivalTime: { $lt: endTime },
+            departureTime: { $gte: endTime },
+          },
+        ],
+      });
+  
     console.log("BookingTable:",bookedTables);
 
     const bookedTableNames = bookedTables.map((booking) => booking.tableName);
