@@ -18,18 +18,19 @@ export async function GET(req) {
 
     console.log("End time:", endTime);
 
-    // Find bookings where the ranges intersect
+    // Find bookings where the ranges intersect and the status is not "Cancelled" or "Completed"
     const bookedTables = await Booking.find({
+      status: { $nin: ["Cancelled", "Completed"] }, // Ignore "Cancelled" and "Completed" bookings
       $or: [
         // Case 1: Booking starts before the given end time and ends after the given datetime
         {
           arrivalTime: { $lt: endTime },
-          departureTime: { $gt: datetime },
+          departureTime: { $gt: new Date(datetime) },
         },
         // Case 2: Booking starts before or at the given datetime and ends after the given datetime
         {
-          arrivalTime: { $lte: datetime },
-          departureTime: { $gt: datetime },
+          arrivalTime: { $lte: new Date(datetime) },
+          departureTime: { $gt: new Date(datetime) },
         },
         // Case 3: Booking starts before the given end time and ends at or after the given end time
         {
