@@ -73,7 +73,7 @@ export async function GET(req) {
   
       // Find the booking by ID and update its status
       const BookingModel = new Booking();
-      const updatedBooking = await BookingModel.getBookingById(
+      const updatedBooking = await BookingModel.updateBookingById(
         bookingId,
         { status: newStatus },
         { new: true }
