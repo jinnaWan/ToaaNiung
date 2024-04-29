@@ -80,7 +80,9 @@ export default function HistoryBooking() {
         const response = await axios.get("/api/user", {
           params: { data: JSON.stringify({ email: session?.user?.email }) },
         });
-
+        
+        console.log("full:",response);
+        console.log("res:",response.data);
         setBookings(response.data);
         setLoading(false); // Update loading state after fetching
       } catch (error) {

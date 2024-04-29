@@ -37,11 +37,13 @@ export async function updateUserProfile(req) {
 export async function getUserBookings(req) {
   try {
     await mongooseConnect();
-    const data = await req.json();
-    const { email } = data;
+    const searchParams = req.nextUrl.searchParams;
+    const data = searchParams.get("data");
+    const  email = data;
+    console.log(email);
 
     const bookingModel = new Booking();
-    const bookings = await bookingModel.getAllBookingsByEmail(email);
+    const bookings = await bookingModel.getAllBookings({userEmail : email});
 
     const filteredBookings = bookings.map((booking) => ({
       id: booking._id,

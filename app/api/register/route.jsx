@@ -1,4 +1,4 @@
-import { registerUser, checkUserExists } from "@/app/controllers/RegisterContrller";
+import { registerUser, checkUserExists } from "@/app/controllers/RegisterController";
 
 export async function POST(req) {
   if (req.method === "POST") {

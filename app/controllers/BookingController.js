@@ -14,24 +14,6 @@ export async function getAvailableTables(req) {
 
     const endTime = new Date(new Date(datetime).getTime() + 2 * 60 * 60 * 1000);
 
-    // const bookingModel = new Booking();
-    // const bookedTables = await bookingModel.getAllBookings({
-    //   $or: [
-    //     {
-    //       arrivalTime: { $lt: endTime },
-    //       departureTime: { $gt: datetime },
-    //     },
-    //     {
-    //       arrivalTime: { $lte: datetime },
-    //       departureTime: { $gt: datetime },
-    //     },
-    //     {
-    //       arrivalTime: { $lt: endTime },
-    //       departureTime: { $gte: endTime },
-    //     },
-    //   ],
-    // });
-
     // Find bookings where the ranges intersect and the status is not "Cancelled"
     const bookingModel = new Booking();
     const bookedTables = await bookingModel.getAllBookings({
