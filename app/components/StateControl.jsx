@@ -1,6 +1,6 @@
-// Abstract status class
 import React from "react";
 
+// Abstract status class
 class BookingStatus {
     constructor(value) {
       this.value = value;
