@@ -1,11 +1,9 @@
-import { NextResponse } from "next/server";
+// routes.js
 import UserController from "@/app/controllers/UserController";
-
-const userController = new UserController();
 
 export async function PUT(req) {
   if (req.method === "PUT") {
-    return await userController.updateUserProfile(req);
+    return await UserController.updateUserProfile(req);
   } else {
     return NextResponse.json({ message: "Method not allowed." }, { status: 405 });
   }
@@ -13,7 +11,7 @@ export async function PUT(req) {
 
 export async function GET(req) {
   if (req.method === "GET") {
-    return await userController.getUserBookings(req);
+    return await UserController.getUserBookings(req);
   } else {
     return NextResponse.json({ message: "Method not allowed." }, { status: 405 });
   }
@@ -21,9 +19,8 @@ export async function GET(req) {
 
 export async function POST(req) {
   if (req.method === "POST") {
-    return await userController.updateBookingStatus(req);
+    return await UserController.updateBookingStatus(req);
   } else {
     return NextResponse.json({ message: "Method not allowed." }, { status: 405 });
   }
 }
-

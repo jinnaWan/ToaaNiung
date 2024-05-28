@@ -1,13 +1,31 @@
-// UserController.js
 import { NextResponse } from "next/server";
 import { mongooseConnect } from "@/lib/mongoose";
 import User from "@/models/User";
 import Booking from "@/models/Booking";
 import bcrypt from "bcryptjs";
 
+class UserRepository {
+  async updateUserByEmail(email, updateData) {
+    return User.updateOne({ email }, { $set: updateData });
+  }
+}
+
+class BookingRepository {
+  async getAllBookings(query) {
+    return Booking.find(query);
+  }
+
+  async updateBookingById(bookingIds, status) {
+    return Booking.updateMany(
+      { _id: { $in: bookingIds } },
+      { $set: { status } }
+    );
+  }
+}
+
 class UserService {
-  constructor(userModel) {
-    this.userModel = userModel;
+  constructor(userRepository) {
+    this.userRepository = userRepository;
   }
 
   async updateUserProfile(data) {
@@ -16,9 +34,9 @@ class UserService {
     if (password) {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
-      return this.userModel.updateUserByEmail(currentemail, { password: hashedPassword });
+      return this.userRepository.updateUserByEmail(currentemail, { password: hashedPassword });
     } else if (name && email && currentemail) {
-      return this.userModel.updateUserByEmail(currentemail, { name, email });
+      return this.userRepository.updateUserByEmail(currentemail, { name, email });
     } else {
       throw new Error("Invalid data provided.");
     }
@@ -26,12 +44,12 @@ class UserService {
 }
 
 class BookingService {
-  constructor(bookingModel) {
-    this.bookingModel = bookingModel;
+  constructor(bookingRepository) {
+    this.bookingRepository = bookingRepository;
   }
 
   async getUserBookings(email) {
-    const bookings = await this.bookingModel.getAllBookings({ userEmail: email });
+    const bookings = await this.bookingRepository.getAllBookings({ userEmail: email });
     return bookings.map((booking) => ({
       id: booking._id,
       tableName: booking.tableName,
@@ -46,7 +64,7 @@ class BookingService {
     if (!selectedBookings || !Array.isArray(selectedBookings)) {
       throw new Error("Invalid data format.");
     }
-    return this.bookingModel.updateBookingById(selectedBookings, "Cancelled");
+    return this.bookingRepository.updateBookingById(selectedBookings, "Cancelled");
   }
 }
 
@@ -95,9 +113,10 @@ class UserController {
   }
 }
 
-const bookingModel = new Booking();
-const userModel = new User();
-const userService = new UserService(userModel);
-const bookingService = new BookingService(bookingModel);
+const userRepository = new UserRepository();
+const bookingRepository = new BookingRepository();
+const userService = new UserService(userRepository);
+const bookingService = new BookingService(bookingRepository);
+const userController = new UserController(userService, bookingService);
 
-export default new UserController(userService, bookingService);
+export default userController;
