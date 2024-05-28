@@ -5,35 +5,11 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { InProgressStatus, CompletedStatus, CancelledStatus, DefaultStatus } from '../StateControl';
 
 const headerIconSrc =
   "https://cdn.builder.io/api/v1/image/assets/TEMP/718d45fe-4d2a-4aac-acdc-7ae839147bf1?";
 
-// Helper function to determine status styling
-const getStatusStyle = (status) => {
-  switch (status) {
-    case "In Progress":
-      return {
-        color: "white",
-        backgroundColor: "#ffce3d", // Example hex value
-      };
-    case "Completed":
-      return {
-        color: "white",
-        backgroundColor: "#19ba42", // Example RGB value
-      };
-    case "Cancelled":
-      return {
-        color: "white",
-        backgroundColor: "#ff5319", // Example CSS color name
-      };
-    default:
-      return {
-        color: "white",
-        backgroundColor: "gray", // Example CSS color name
-      };
-  }
-};
 
 export default function HistoryBooking() {
   const { data: session } = useSession();
@@ -47,6 +23,20 @@ export default function HistoryBooking() {
     key: null,
     direction: "ascending",
   });
+
+  // Function to get the status component based on the booking status
+  const getStatusComponent = (status) => {
+    switch (status) {
+      case "In Progress":
+        return new InProgressStatus(status);
+      case "Completed":
+        return new CompletedStatus(status);
+      case "Cancelled":
+        return new CancelledStatus(status);
+      default:
+        return new DefaultStatus(status);
+    }
+  };
 
   // Function to handle header click for sorting
   const handleHeaderClick = (key) => {
@@ -78,9 +68,12 @@ export default function HistoryBooking() {
     const fetchUserBookings = async () => {
       try {
         const response = await axios.get("/api/user", {
-          params: { data: JSON.stringify({ email: session?.user?.email }) },
+          
+          params: { data: JSON.stringify(session?.user?.email) },
         });
-
+        
+        console.log("full:",response);
+        console.log("res:",response.data);
         setBookings(response.data);
         setLoading(false); // Update loading state after fetching
       } catch (error) {
@@ -146,6 +139,8 @@ export default function HistoryBooking() {
 
     return thailandTime.toLocaleString();
   };
+
+
 
   return (
     <div className="flex  flex-col mt-20 self-start  w-5/6 ">
@@ -262,18 +257,7 @@ export default function HistoryBooking() {
                           formatThailandTime(value) // Format the arrival time to Thailand time
                         ) : key === "status" ? (
                           // Inside the component where the status is displayed
-                          <div
-                            className={`text-${
-                              getStatusStyle(value).color
-                            } text-sm px-3 py-1 font-medium whitespace-nowrap`}
-                            style={{
-                              backgroundColor:
-                                getStatusStyle(value).backgroundColor,
-                              borderRadius: "33px",
-                            }}
-                          >
-                            {value}
-                          </div>
+                          getStatusComponent(value).render()
                         ) : (
                           value
                         )}

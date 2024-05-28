@@ -1,7 +1,7 @@
 import { mongooseConnect } from "@/lib/mongoose";
-import { User } from "@/models/User";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import User from "@/models/User";
 import bcrypt from "bcryptjs";
 
 export const authOptions = {
@@ -19,11 +19,15 @@ export const authOptions = {
         const { email, password } = credentials;
         await mongooseConnect();
         try {
-          const user = await User.findOne({ email });
+          const userModel = new User();
+          const user = await userModel.getUserByEmail(email);
 
           if (!user) {
             return null;
           }
+          // else {
+          //   console.log("User: ", user);
+          // }
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
 

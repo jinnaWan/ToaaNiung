@@ -1,7 +1,7 @@
 import { mongooseConnect } from "@/lib/mongoose";
-import { Booking } from "@/models/Booking";
 import { NextResponse } from "next/server";
-import { User } from "@/models/User";
+import User from "@/models/User";
+import Booking from "@/models/Booking";
 
 export async function POST(req) {
   try {
@@ -12,7 +12,8 @@ export async function POST(req) {
 
     // Fetch bookings that match the criteria
     const thirtyMinutesAgo = new Date(new Date(thailandTime) - 30 * 60 * 1000); // 30 minutes ago
-    const bookingsToUpdate = await Booking.find({
+    const bookingModel = new Booking();
+    const bookingsToUpdate = await bookingModel.getAllBookings({
       status: "In Progress",
       arrivalTime: { $lte: thirtyMinutesAgo }
     });
@@ -27,7 +28,8 @@ export async function POST(req) {
     // Update user penalties and status based on the number of bookings found
     await Promise.all(
       Object.entries(bookingsByUser).map(async ([userEmail, bookingCount]) => {
-        const user = await User.findOne({ email: userEmail });
+        const UserModel = new User();
+        const user = await UserModel.getUserByEmail(userEmail);
 
         if (user) {
           user.penalty += bookingCount; // Increment penalty by the number of bookings
