@@ -79,7 +79,10 @@ class Booking {
   // Method to update a booking by ID
   async updateBookingById(id, updates) {
     try {
-      const booking = await this.Booking.findByIdAndUpdate(id, updates, { new: true });
+      console.log("id: ", id);
+      console.log("updates: ", updates);
+
+      const booking = await this.Booking.findByIdAndUpdate(id, { $set: { status: updates } }, { new: true });
       return booking;
     } catch (error) {
       throw error;
