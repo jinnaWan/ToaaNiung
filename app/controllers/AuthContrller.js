@@ -1,3 +1,141 @@
+import { mongooseConnect } from "@/lib/mongoose";
+import NextAuth from "next-auth/next";
+import CredentialsProvider from "next-auth/providers/credentials";
+import User from "@/models/User";
+import bcrypt from "bcryptjs";
+//Factory Method Pattern with solid
+class AuthHandler {
+  constructor(authOptions) {
+    this.authOptions = authOptions;
+    this.handler = NextAuth(this.authOptions);
+  }
+
+  async authorizeUser(credentials) {
+    const { email, password } = credentials;
+    await mongooseConnect();
+
+    try {
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return null;
+      }
+
+      const passwordsMatch = await bcrypt.compare(password, user.password);
+
+      if (!passwordsMatch || user.status === "Banned") {
+        return null;
+      }
+
+      return user;
+    } catch (error) {
+      console.log("Error: ", error);
+      return null;
+    }
+  }
+
+  async handleJWT({ token, user, trigger, session }) {
+    if (trigger === "update") {
+      return { ...token, ...session.user };
+    }
+
+    if (user) {
+      return {
+        ...token,
+        isAdmin: user.isAdmin,
+        status: user.status,
+      };
+    }
+
+    return token;
+  }
+
+  async handleSession({ session, token }) {
+    session.user = token;
+    return {
+      ...session,
+      user: {
+        ...session.user,
+        isAdmin: token.isAdmin,
+        status: token.status,
+      },
+    };
+  }
+
+  getHandler() {
+    return this.handler;
+  }
+}
+
+class AuthHandlerFactory {
+  static createAdminAuthHandler() {
+    const authOptions = {
+      providers: [
+        CredentialsProvider({
+          id: "credentials",
+          name: "Credentials",
+          credentials: {
+            email: { label: "Email", type: "text" },
+            password: { label: "Password", type: "password" },
+          },
+          async authorize(credentials) {
+            return this.authorizeUser(credentials);
+          },
+        }),
+      ],
+      callbacks: {
+        jwt: this.handleJWT,
+        session: this.handleSession,
+      },
+      session: {
+        strategy: "jwt",
+      },
+      secret: process.env.NEXTAUTH_SECRET,
+      pages: {
+        signIn: "/admin/login",
+      },
+    };
+
+    return new AuthHandler(authOptions);
+  }
+
+  static createUserAuthHandler() {
+    const authOptions = {
+      providers: [
+        CredentialsProvider({
+          id: "credentials",
+          name: "Credentials",
+          credentials: {
+            email: { label: "Email", type: "text" },
+            password: { label: "Password", type: "password" },
+          },
+          async authorize(credentials) {
+            return this.authorizeUser(credentials);
+          },
+        }),
+      ],
+      callbacks: {
+        jwt: this.handleJWT,
+        session: this.handleSession,
+      },
+      session: {
+        strategy: "jwt",
+      },
+      secret: process.env.NEXTAUTH_SECRET,
+      pages: {
+        signIn: "/login",
+      },
+    };
+
+    return new AuthHandler(authOptions);
+  }
+}
+
+const adminAuthHandler = AuthHandlerFactory.createAdminAuthHandler();
+const userAuthHandler = AuthHandlerFactory.createUserAuthHandler();
+
+export { adminAuthHandler, userAuthHandler };
+
 /*import { mongooseConnect } from "@/lib/mongoose";
 import { User } from "@/models/User";
 import NextAuth from "next-auth/next";
@@ -86,6 +224,8 @@ const handler = NextAuth(authOptions);
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 export default handler;*/
+/* Factory Method Pattern
+
 import { mongooseConnect } from "@/lib/mongoose";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -223,7 +363,7 @@ const adminAuthHandler = AuthHandlerFactory.createAdminAuthHandler();
 const userAuthHandler = AuthHandlerFactory.createUserAuthHandler();
 
 export { adminAuthHandler, userAuthHandler };
-
+*/
 /*In this refactored version, we have introduced the Factory Method pattern to create instances of the AuthHandler class with different configurations. Here's how it works:
 
 The AuthHandler class remains mostly the same, except that it now takes an authOptions object in its constructor.
