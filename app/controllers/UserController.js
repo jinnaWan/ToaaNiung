@@ -1,54 +1,10 @@
 // UserController.js
 import { NextResponse } from "next/server";
 import { mongooseConnect } from "@/lib/mongoose";
+import BookingService from "../services/BookingService";
+import UserService from "../services/UserService";
 import User from "@/models/User";
 import Booking from "@/models/Booking";
-import bcrypt from "bcryptjs";
-
-class UserService {
-  constructor(userModel) {
-    this.userModel = userModel;
-  }
-
-  async updateUserProfile(data) {
-    const { password, name, email, currentemail } = data;
-
-    if (password) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-      return this.userModel.updateUserByEmail(currentemail, { password: hashedPassword });
-    } else if (name && email && currentemail) {
-      return this.userModel.updateUserByEmail(currentemail, { name, email });
-    } else {
-      throw new Error("Invalid data provided.");
-    }
-  }
-}
-
-class BookingService {
-  constructor(bookingModel) {
-    this.bookingModel = bookingModel;
-  }
-
-  async getUserBookings(email) {
-    const bookings = await this.bookingModel.getAllBookings({ userEmail: email });
-    return bookings.map((booking) => ({
-      id: booking._id,
-      tableName: booking.tableName,
-      tableSize: booking.tableSize,
-      numberOfPeople: booking.numberOfPeople,
-      status: booking.status,
-      arrivalTime: booking.arrivalTime,
-    }));
-  }
-
-  async updateBookingStatus(selectedBookings) {
-    if (!selectedBookings || !Array.isArray(selectedBookings)) {
-      throw new Error("Invalid data format.");
-    }
-    return this.bookingModel.updateBookingById(selectedBookings, "Cancelled");
-  }
-}
 
 class UserController {
   constructor(userService, bookingService) {
