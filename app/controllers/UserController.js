@@ -15,8 +15,10 @@ class UserController {
   async updateUserProfile(req) {
     try {
       await mongooseConnect();
-      const data = await req.json();
-      const updatedUser = await this.userService.updateUserProfile(data);
+      const searchParams = req.nextUrl.searchParams;
+      const data = searchParams.get("data");
+      const parsedData = JSON.parse(data || "{}");
+      const updatedUser = await this.userService.updateUserProfile(parsedData);
       return NextResponse.json(updatedUser, { status: 200 });
     } catch (error) {
       console.error("Error updating user profile:", error);
