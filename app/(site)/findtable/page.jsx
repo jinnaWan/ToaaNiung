@@ -86,10 +86,12 @@ export default function FindTable() {
 
     // Fetch booked tables for the selected date and time
     try {
+      console.log("Fetching booked tables for", thailandTime.toISOString());
       const response = await axios.get(
         `/api/booking?datetime=${thailandTime.toISOString()}`
       );
 
+      console.log("Full Response:", response);
       // console.log("Full Response:", response);
       // console.log("Response data:", response.data);
 

@@ -77,7 +77,7 @@ export default function MyProfile() {
             <div className="items-stretch flex flex-col px-2">
               <img
                 loading="lazy"
-                srcSet="https://cdn.discordapp.com/attachments/799566223628173316/1173622367034015824/585e4beacb11b227491c3399.png?ex=6564a001&is=65522b01&hm=ec1ac578a8898cd9cb8d0a17d439d9fba621106b98c499b121b13c237e9d119a&"
+                srcSet="https://cdn.discordapp.com/attachments/912258047374663680/1245373954756186192/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg?ex=66588460&is=665732e0&hm=404aceba4348d642388a4c6f072aa932c87d334f2e5ec90e6b27d339434ec5e3&"
                 className="aspect-square object-contain object-center w-[95px] overflow-hidden self-center max-w-full rounded-[50%] bg-black"
               />
               <div className="text-black text-center text-2xl font-medium leading-8 mt-2.5">

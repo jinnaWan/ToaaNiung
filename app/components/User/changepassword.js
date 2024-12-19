@@ -6,8 +6,36 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
+// Define a decorator function for password validation
+const withPasswordValidation = (WrappedComponent) => {
+  return class extends React.Component {
+    validatePassword = (password) => {
+      // Add your password validation logic here
+      const hasUppercase = /[A-Z]/.test(password);
+      const hasLowercase = /[a-z]/.test(password);
+      const hasNumber = /\d/.test(password);
+      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+      const isLongEnough = password.length >= 8;
+
+      return hasUppercase && hasLowercase && hasNumber && hasSpecialChar && isLongEnough;
+    };
+
+    render() {
+      return (
+        <WrappedComponent
+          {...this.props}
+          validatePassword={this.validatePassword}
+        />
+      );
+    }
+  };
+};
+
+// Decorate the ChangePassword component
+const ChangePasswordWithValidation = withPasswordValidation(ChangePassword);
+
 // ChangePassword component
-export default function ChangePassword() {
+function ChangePassword({ validatePassword }) {
   // Define state variables for the new password and confirm password
   const [password, setPassword] = React.useState("");
   const [confirmPassword, setConfirmPassword] = React.useState("");
@@ -28,6 +56,14 @@ export default function ChangePassword() {
     // Simple validation for the new password and confirm password
     if (!password.trim() || !confirmPassword.trim()) {
       toast.error("New password and confirm password are required.");
+      return;
+    }
+
+    // Use the validatePassword function provided by the decorator
+    if (!validatePassword(password)) {
+      toast.error(
+        "Password must contain at least 8 characters, including at least one uppercase letter, one lowercase letter, one number, and one special character."
+      );
       return;
     }
 
@@ -100,4 +136,9 @@ export default function ChangePassword() {
       </form>
     </div>
   );
+}
+
+// Render the decorated component
+export default function ChangePasswordMain() {
+  return <ChangePasswordWithValidation />;
 }
